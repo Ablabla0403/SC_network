@@ -1,1 +1,1 @@
-# SC_network
+# SC_neural_network
