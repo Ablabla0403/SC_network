@@ -1,26 +1,33 @@
-# CC and CFLAGS are varilables
-CC = g++
-CFLAGS = -c
-AR = ar
-ARFLAGS = rcv
-# -c option ask g++ to compile the source files, but do not link.
-# -g option is for debugging version
-# -O2 option is for optimized version
-OPTFLAGS = -O3
+CXX = g++
+CFLAGS = -Wall -std=c++11 -Wno-psabi
+OPTFLAGS = -g
+# LDFLAGS = -L/usr/local/lib -Llib/
+# OPTFLAGS = -O3
 
-all     : bin/sc
-        @echo -n ""
+SRC_DIR = src/
+INC_DIR = inc/ 
+BIN_DIR = bin/
+LIB_DIR = lib/
 
-# optimized version
-bin/sc  : SC_opt.o main_opt.o
-                        $(CC) $(OPTFLAGS) SC_opt.o main_opt.o -o bin/sc
-main_opt.o              : src/main.cpp inc/SC.h
-                        $(CC) $(CFLAGS) $< -Ilib -o $@
-SC_opt.o        : src/SC.cpp inc/SC.h
-                        $(CC) $(CFLAGS) $(OPTFLAGS) $< -o $@
+LIBS = 
+EXEC = main
+BIN	= $(addprefix $(BIN_DIR), $(EXEC))
+INC = -I$(INC_DIR)
+SRC = $(wildcard $(SRC_DIR)*.cpp)
+OBJ = $(SRC:%.cpp=%.o)
 
-# clean all the .o and executable files
+.PHONY: all clean
+
+all: $(BIN)
+
+$(BIN): $(OBJ)
+	$(CXX) $(CFLAGS) $(OPTFLAGS) $^ $(LIBS) -o $(BIN)
+	@echo "FINISH"
+
+%.o : %.cpp
+	@echo ">> compiling: $<"
+	$(CXX) $(CFLAGS) $(INC) $(LIBS) -c $< -o $@
 clean:
-                rm -rf *.o lib/*.a lib/*.o bin/*
+	rm -f $(BIN) $(OBJ)
 
 
