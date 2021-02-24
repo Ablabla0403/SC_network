@@ -20,6 +20,7 @@ struct ESL{  //數字struct，一個存分子一個存分母
     bool *h;
     bool *l;
 };
+
 class SC
 {
 public:
