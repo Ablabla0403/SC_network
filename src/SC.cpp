@@ -1,4 +1,4 @@
-#include <cstring>
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -25,6 +25,16 @@ double SC::print(ESL a){
         }
     }
     return to_bipolar(answer1) / to_bipolar(answer2);
+}
+
+double SC::print(bool* a){
+    int count = 0;
+    for (size_t i = 0; i < bit_len; i++){
+        if (a[i] == true){
+            count ++;
+        }
+    }
+    return to_bipolar(count);
 }
 
 
@@ -67,7 +77,7 @@ ESL SC::number_gen(double number, bool *all_one){ //分母先都初始化為一
 
 
 
-bool* SC::XNOR(bool *a, bool *b){
+bool* SC::XNOR(bool* a, bool* b){
     bool* XNOR_output = new bool[bit_len];
     int count = 0;
     for(int i = 0; i < bit_len; i++){
@@ -80,6 +90,22 @@ bool* SC::XNOR(bool *a, bool *b){
         }
     }
     return XNOR_output;
+}
+
+bool* SC::APC(bool* a, bool* b){
+    int count = 0;
+    for(size_t i=0; i<bit_len; i++){
+        if(a[i] == true){
+            count ++;
+        }
+        else if(b[i] == true){
+            count++;
+        }
+    }
+    if(count > bit_len){
+        count = bit_len;
+    }
+    return bit_gen(to_bipolar(count));
 }
 
 ESL SC::APC(ESL a, ESL b){
@@ -101,6 +127,8 @@ ESL SC::APC(ESL a, ESL b){
     }
     double h = (to_bipolar(count1)*to_bipolar(count4)+to_bipolar(count3)*to_bipolar(count2));
     double l = to_bipolar(count2)*to_bipolar(count4);
+
+    //TODO : reconstruct APC and study APC in the paper
     if (h > 1 || h < -1 || l > 1 || l<-1){
         output.h = bit_gen(h*0.5);
         output.l = bit_gen(l*0.5);
@@ -113,17 +141,15 @@ ESL SC::APC(ESL a, ESL b){
         output.h = bit_gen(h);
         output.l = bit_gen(l);
     }
-    
-    
-    
+        
     return output;
 }
 
 
-bool* SC::MUX(bool *a, bool *b){
+bool* SC::MUX(bool* a, bool* b){
 
     bool *MUX_output = new bool[bit_len];
-    for(int i = 0; i < bit_len; i++){
+    for(size_t i = 0; i < bit_len; i++){
         
         double r = (double)rand() / (RAND_MAX + 1.0);
         if(r > 0.5){
@@ -132,6 +158,7 @@ bool* SC::MUX(bool *a, bool *b){
         else{
             MUX_output[i] = b[i];
         }
+        
     }
     return MUX_output;
 }
@@ -152,5 +179,31 @@ ESL SC::ESL_Adder(ESL a, ESL b){
     out.h = MUX(XNOR(a.h,b.l),XNOR(a.l,b.h));
     out.l = MUX(XNOR(a.l,b.l),bit_gen(0));
     
+    return out;
+}
+
+bool* SC::ReLU(bool* a){
+    bool* out = new bool[bit_len];
+    double r = (double)rand() / (RAND_MAX );
+    int counter = 0;
+    for (int i = 0; i < bit_len; i++){
+        if (a[i] == 1){
+            counter ++;
+        }
+        else{
+            counter --;
+        }
+        if (counter >= 0){
+            out[i] = a[i];
+        }
+        else{
+            if (r > 0.5){
+                out[i] = 1;
+            }
+            else{
+                out[i] = 0;
+            }
+        }
+    }
     return out;
 }

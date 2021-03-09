@@ -6,7 +6,6 @@
 #ifndef SC_H
 #define SC_H
 
-#include <cstring>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -14,7 +13,7 @@
 #include <stdlib.h>
 #include <time.h>
 using namespace std;
-const int bit_len = 1000000;
+const int bit_len = 200000;
 
 struct ESL{  //數字struct，一個存分子一個存分母
     bool *h;
@@ -27,13 +26,17 @@ public:
     SC() {}
     double to_bipolar(int);
     double print(ESL);
+    double print(bool*);
     bool* bit_gen(double);
     ESL number_gen(double , bool*);
     bool* XNOR(bool*, bool*);
     ESL APC(ESL, ESL);
+    bool* APC(bool*, bool*);
     bool* MUX(bool*, bool*);
     ESL ESL_Multiplier(ESL, ESL);
     ESL ESL_Adder(ESL, ESL);
+    bool* ReLU(bool*);
 };
+
 
 #endif
