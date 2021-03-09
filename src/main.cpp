@@ -1,4 +1,3 @@
-#include <cstring>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -13,21 +12,24 @@ int main(int argc,char** argv){
     srand(time(NULL));
     cout<<"program in"<<endl;
     bool all_one[bit_len];
+    bool all_zero[bit_len];
     for(int i = 0; i< bit_len; i++){
         all_one[i] = true;
+        all_zero[i] = false;
     }
-    ESL w,x,y,z,out1,out2,a;
-    double answer1 = 0,answer2 = 0;
-    x = sc.number_gen(2,all_one); //error here!!!
-    y = sc.number_gen(4,all_one);
-    z = sc.number_gen(0.6,all_one);
-    w = sc.number_gen(3,all_one);
-    cout<<"numnber generated"<<endl;
-    out1 = sc.APC(x,y);
-    out2 = sc.ESL_Multiplier(w,z);
-    a = sc.ESL_Multiplier(out1,out2);
 
-    cout<<"out2 = "<<sc.print(out2)<<endl;
+    // ESL w,x,y,z,out1,out2,a;
+    // double answer1 = 0,answer2 = 0;
+    // x = sc.number_gen(0.3,all_one); //error here!!!
+    // y = sc.number_gen(0.6,all_one);
+    // z = sc.number_gen(0.6,all_one);
+    // w = sc.number_gen(3,all_one);
+    // cout<<"numnber generated"<<endl;
+    // out1 = sc.APC(x,y);
+    // out2 = sc.ESL_Multiplier(w,z);
+    // a = sc.ESL_Multiplier(out1,out2);
+
+    // cout<<"out1 = "<<sc.print(out1)<<endl;
     
     double weight_1[10][4] = {{-0.0036, -0.8222,  1.1428,  0.8296},
         { 0.6314,  1.0744, -0.6075, -0.9300},
@@ -89,71 +91,218 @@ int main(int argc,char** argv){
         {4.8000, 3.1000, 1.6000, 0.2000}};
     float corr_answer[30] = {1, 0, 2, 1, 1, 0, 1, 2, 1, 1, 2, 0, 0, 0, 0, 1, 2, 1, 1, 2, 0, 2, 0, 2,
         2, 2, 2, 2, 0, 0};
+    
+    double train_data[120][4] {{4.6000, 3.6000, 1.0000, 0.2000},
+        {5.7000, 4.4000, 1.5000, 0.4000},
+        {6.7000, 3.1000, 4.4000, 1.4000},
+        {4.8000, 3.4000, 1.6000, 0.2000},
+        {4.4000, 3.2000, 1.3000, 0.2000},
+        {6.3000, 2.5000, 5.0000, 1.9000},
+        {6.4000, 3.2000, 4.5000, 1.5000},
+        {5.2000, 3.5000, 1.5000, 0.2000},
+        {5.0000, 3.6000, 1.4000, 0.2000},
+        {5.2000, 4.1000, 1.5000, 0.1000},
+        {5.8000, 2.7000, 5.1000, 1.9000},
+        {6.0000, 3.4000, 4.5000, 1.6000},
+        {6.7000, 3.1000, 4.7000, 1.5000},
+        {5.4000, 3.9000, 1.3000, 0.4000},
+        {5.4000, 3.7000, 1.5000, 0.2000},
+        {5.5000, 2.4000, 3.7000, 1.0000},
+        {6.3000, 2.8000, 5.1000, 1.5000},
+        {6.4000, 3.1000, 5.5000, 1.8000},
+        {6.6000, 3.0000, 4.4000, 1.4000},
+        {7.2000, 3.6000, 6.1000, 2.5000},
+        {5.7000, 2.9000, 4.2000, 1.3000},
+        {7.6000, 3.0000, 6.6000, 2.1000},
+        {5.6000, 3.0000, 4.5000, 1.5000},
+        {5.1000, 3.5000, 1.4000, 0.2000},
+        {7.7000, 2.8000, 6.7000, 2.0000},
+        {5.8000, 2.7000, 4.1000, 1.0000},
+        {5.2000, 3.4000, 1.4000, 0.2000},
+        {5.0000, 3.5000, 1.3000, 0.3000},
+        {5.1000, 3.8000, 1.9000, 0.4000},
+        {5.0000, 2.0000, 3.5000, 1.0000},
+        {6.3000, 2.7000, 4.9000, 1.8000},
+        {4.8000, 3.4000, 1.9000, 0.2000},
+        {5.0000, 3.0000, 1.6000, 0.2000},
+        {5.1000, 3.3000, 1.7000, 0.5000},
+        {5.6000, 2.7000, 4.2000, 1.3000},
+        {5.1000, 3.4000, 1.5000, 0.2000},
+        {5.7000, 3.0000, 4.2000, 1.2000},
+        {7.7000, 3.8000, 6.7000, 2.2000},
+        {4.6000, 3.2000, 1.4000, 0.2000},
+        {6.2000, 2.9000, 4.3000, 1.3000},
+        {5.7000, 2.5000, 5.0000, 2.0000},
+        {5.5000, 4.2000, 1.4000, 0.2000},
+        {6.0000, 3.0000, 4.8000, 1.8000},
+        {5.8000, 2.7000, 5.1000, 1.9000},
+        {6.0000, 2.2000, 4.0000, 1.0000},
+        {5.4000, 3.0000, 4.5000, 1.5000},
+        {6.2000, 3.4000, 5.4000, 2.3000},
+        {5.5000, 2.3000, 4.0000, 1.3000},
+        {5.4000, 3.9000, 1.7000, 0.4000},
+        {5.0000, 2.3000, 3.3000, 1.0000},
+        {6.4000, 2.7000, 5.3000, 1.9000},
+        {5.0000, 3.3000, 1.4000, 0.2000},
+        {5.0000, 3.2000, 1.2000, 0.2000},
+        {5.5000, 2.4000, 3.8000, 1.1000},
+        {6.7000, 3.0000, 5.0000, 1.7000},
+        {4.9000, 3.1000, 1.5000, 0.2000},
+        {5.8000, 2.8000, 5.1000, 2.4000},
+        {5.0000, 3.4000, 1.5000, 0.2000},
+        {5.0000, 3.5000, 1.6000, 0.6000},
+        {5.9000, 3.2000, 4.8000, 1.8000},
+        {5.1000, 2.5000, 3.0000, 1.1000},
+        {6.9000, 3.2000, 5.7000, 2.3000},
+        {6.0000, 2.7000, 5.1000, 1.6000},
+        {6.1000, 2.6000, 5.6000, 1.4000},
+        {7.7000, 3.0000, 6.1000, 2.3000},
+        {5.5000, 2.5000, 4.0000, 1.3000},
+        {4.4000, 2.9000, 1.4000, 0.2000},
+        {4.3000, 3.0000, 1.1000, 0.1000},
+        {6.0000, 2.2000, 5.0000, 1.5000},
+        {7.2000, 3.2000, 6.0000, 1.8000},
+        {4.6000, 3.1000, 1.5000, 0.2000},
+        {5.1000, 3.5000, 1.4000, 0.3000},
+        {4.4000, 3.0000, 1.3000, 0.2000},
+        {6.3000, 2.5000, 4.9000, 1.5000},
+        {6.3000, 3.4000, 5.6000, 2.4000},
+        {4.6000, 3.4000, 1.4000, 0.3000},
+        {6.8000, 3.0000, 5.5000, 2.1000},
+        {6.3000, 3.3000, 6.0000, 2.5000},
+        {4.7000, 3.2000, 1.3000, 0.2000},
+        {6.1000, 2.9000, 4.7000, 1.4000},
+        {6.5000, 2.8000, 4.6000, 1.5000},
+        {6.2000, 2.8000, 4.8000, 1.8000},
+        {7.0000, 3.2000, 4.7000, 1.4000},
+        {6.4000, 3.2000, 5.3000, 2.3000},
+        {5.1000, 3.8000, 1.6000, 0.2000},
+        {6.9000, 3.1000, 5.4000, 2.1000},
+        {5.9000, 3.0000, 4.2000, 1.5000},
+        {6.5000, 3.0000, 5.2000, 2.0000},
+        {5.7000, 2.6000, 3.5000, 1.0000},
+        {5.2000, 2.7000, 3.9000, 1.4000},
+        {6.1000, 3.0000, 4.6000, 1.4000},
+        {4.5000, 2.3000, 1.3000, 0.3000},
+        {6.6000, 2.9000, 4.6000, 1.3000},
+        {5.5000, 2.6000, 4.4000, 1.2000},
+        {5.3000, 3.7000, 1.5000, 0.2000},
+        {5.6000, 3.0000, 4.1000, 1.3000},
+        {7.3000, 2.9000, 6.3000, 1.8000},
+        {6.7000, 3.3000, 5.7000, 2.1000},
+        {5.1000, 3.7000, 1.5000, 0.4000},
+        {4.9000, 2.4000, 3.3000, 1.0000},
+        {6.7000, 3.3000, 5.7000, 2.5000},
+        {7.2000, 3.0000, 5.8000, 1.6000},
+        {4.9000, 3.6000, 1.4000, 0.1000},
+        {6.7000, 3.1000, 5.6000, 2.4000},
+        {4.9000, 3.0000, 1.4000, 0.2000},
+        {6.9000, 3.1000, 4.9000, 1.5000},
+        {7.4000, 2.8000, 6.1000, 1.9000},
+        {6.3000, 2.9000, 5.6000, 1.8000},
+        {5.7000, 2.8000, 4.1000, 1.3000},
+        {6.5000, 3.0000, 5.5000, 1.8000},
+        {6.3000, 2.3000, 4.4000, 1.3000},
+        {6.4000, 2.9000, 4.3000, 1.3000},
+        {5.6000, 2.8000, 4.9000, 2.0000},
+        {5.9000, 3.0000, 5.1000, 1.8000},
+        {5.4000, 3.4000, 1.7000, 0.2000},
+        {6.1000, 2.8000, 4.0000, 1.3000},
+        {4.9000, 2.5000, 4.5000, 1.7000},
+        {5.8000, 4.0000, 1.2000, 0.2000},
+        {5.8000, 2.6000, 4.0000, 1.2000},
+        {7.1000, 3.0000, 5.9000, 2.1000}};
+
+
+int train_label[120] = {
+  0 ,0, 1, 0, 0, 2, 1, 0, 0, 0, 2, 1, 1, 0, 0, 1, 2, 2, 1, 2, 1, 2, 1, 0, 2, 1, 0, 0, 0, 1, 2, 0, 0, 0, 1, 0, 1,
+ 2, 0, 1, 2, 0, 2, 2, 1, 1, 2, 1, 0, 1, 2, 0, 0, 1, 1, 0, 2, 0, 0, 1, 1, 2, 1, 2, 2, 1, 0, 0, 2, 2, 0, 0, 0, 1,
+ 2, 0, 2, 2, 0, 1, 1, 2, 1, 2, 0, 2, 1, 2, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 0, 1, 2, 2, 0, 2, 0, 1, 2, 2, 1, 2, 1,
+ 1, 2, 2, 0, 1, 2, 0, 1, 2
+};
+        
     ESL layer_0[4];
+    for(size_t i=0; i<4; i++){
+        layer_0[i] = sc.number_gen(0,all_one);
+    } 
     ESL layer_1[10];
-    ESL layer_2[5];
-    ESL layer_3[3];
+    for(size_t i=0; i<10; i++){
+        layer_1[i] = sc.number_gen(0,all_one);
+    } 
+    bool* layer_1_1[10];
+    for(size_t i=0; i<10; i++){
+        layer_1_1[i] = new bool[bit_len];
+    } 
+    bool* layer_2[5];
+    for(size_t i=0; i<5; i++){
+        layer_2[i] = new bool[bit_len];
+    } 
+    bool* layer_3[3];
+    for(size_t i=0; i<3; i++){
+        layer_3[i] = new bool[bit_len];
+    } 
+
     float corr_count = 0;
     float max=0,temp=0,max_cand=0;
-    for(int k=0;k<30;k++){
-        for(int i=0;i<4;i++){
-            layer_0[i] = sc.number_gen(x_test[k][i],all_one);
+    sc.APC(layer_0[0],layer_1[0]);
+
+for(int k=0;k<120;k++){
+        for(int i=0; i<4; i++){
+            layer_0[i] = sc.number_gen(train_data[k][i],all_one);
         }
             
-        for(int i=0;i<10;i++){
-            layer_1[i] = sc.number_gen(0,all_one);
-        }
-        for(int i=0;i<5;i++){
-            layer_2[i] = sc.number_gen(0,all_one);
-        }
-        for(int i=0;i<3;i++){
-            layer_3[i] = sc.number_gen(0,all_one);
-        }
 
         for(int i=0;i<10;i++){
             for(int j=0;j<4;j++){
                 layer_1[i] = sc.APC(layer_1[i] ,sc.ESL_Multiplier(layer_0[j],sc.number_gen(weight_1[i][j],all_one)));
             }
+            
             sc.APC(layer_1[i],sc.number_gen(bias_1[i],all_one));
+            if (sc.print(layer_1[i]) > 1){
+                layer_1_1[i] = all_one;
+            }
+            else if(sc.print(layer_1[i]) < -1){
+                layer_1_1[i] = all_zero;
+            }
+            else{
+                layer_1_1[i] = sc.bit_gen(sc.print(layer_1[i]));
+            }
+            layer_1_1[i] = sc.ReLU(layer_1_1[i]);
         }
+
+
     
         for(int i=0;i<5;i++){
             for(int j=0;j<10;j++){
-                layer_2[i] = sc.APC(layer_2[i] ,sc.ESL_Multiplier(layer_1[j],sc.number_gen(weight_2[i][j],all_one)));
+                layer_2[i] = sc.APC(sc.XNOR(layer_1_1[j],layer_2[i]),layer_2[i]);
             }
-            layer_2[i] = sc.APC(layer_2[i],sc.number_gen(bias_2[i],all_one));
+            layer_2[i] = sc.APC(layer_2[i],sc.bit_gen(bias_2[i]));
             cout<<"layer2 i = "<<i<<' '<<sc.print(layer_2[i])<<endl;
         }
         
-        for(int i=0;i<3;i++){
+        for(int i=0; i<3; i++){
             for(int j=0;j<5;j++){
-                layer_3[i] = sc.APC(layer_3[i] ,sc.ESL_Multiplier(layer_2[j],sc.number_gen(weight_3[i][j],all_one)));
-
-            }
-            
-            layer_3[i] = sc.APC(layer_3[i],sc.number_gen(bias_3[i],all_one));
-            
+                layer_3[i] = sc.APC(layer_3[i] ,sc.XNOR(layer_2[j],sc.bit_gen(weight_3[i][j])));
+            }   
+            layer_3[i] = sc.APC(layer_3[i],sc.bit_gen(bias_3[i]));    
         }
-        for(int j=0;j<3;j++){
+        int answer1;
+        for(int j=0; j<3; j++){
             answer1 = 0;
-            answer2 = 0;
+            cout << "the " << k << "'th training" << j << "th output is: " << sc.print(layer_3[j]) << endl;
             for(int i = 0; i< bit_len; i++){
-                if (layer_3[j].h[i] == true){
+                if (layer_3[j][i] == true){
                     answer1 += 1;
                 }
-                if (layer_3[j].l[i] == true){
-                    answer2 += 1;
-                }
             }
-            temp = (2*answer1/bit_len - 1)/(2*answer2/bit_len - 1);
-            cout<<temp<<endl;
+    
             if(j==0){
-                max = temp;
+                max = answer1;
                 max_cand = 0;
             }
             else{
-                if(temp > max){
-                    max = temp;
+                if(answer1 > max){
+                    max = answer1;
                     max_cand = j;
                 }
             }
@@ -173,3 +322,81 @@ int main(int argc,char** argv){
     cout<<"The rate of correctness is: "<<corr_count/30.0<<endl;
     return 0;
 }
+//     for(int k=0;k<30;k++){
+//         for(int i=0;i<4;i++){
+//             layer_0[i] = sc.number_gen(x_test[k][i],all_one);
+//         }
+            
+//         for(int i=0;i<10;i++){
+//             layer_1[i] = sc.number_gen(0,all_one);
+//         }
+//         for(int i=0;i<5;i++){
+//             layer_2[i] = sc.number_gen(0,all_one);
+//         }
+//         for(int i=0;i<3;i++){
+//             layer_3[i] = sc.number_gen(0,all_one);
+//         }
+
+//         for(int i=0;i<10;i++){
+//             for(int j=0;j<4;j++){
+//                 layer_1[i] = sc.APC(layer_1[i] ,sc.ESL_Multiplier(layer_0[j],sc.number_gen(weight_1[i][j],all_one)));
+//             }
+//             sc.APC(layer_1[i],sc.number_gen(bias_1[i],all_one));
+//         }
+    
+//         for(int i=0;i<5;i++){
+//             for(int j=0;j<10;j++){
+//                 layer_2[i] = sc.APC(layer_2[i] ,sc.ESL_Multiplier(layer_1[j],sc.number_gen(weight_2[i][j],all_one)));
+//             }
+//             layer_2[i] = sc.APC(layer_2[i],sc.number_gen(bias_2[i],all_one));
+//             cout<<"layer2 i = "<<i<<' '<<sc.print(layer_2[i])<<endl;
+//         }
+        
+//         for(int i=0;i<3;i++){
+//             for(int j=0;j<5;j++){
+//                 layer_3[i] = sc.APC(layer_3[i] ,sc.ESL_Multiplier(layer_2[j],sc.number_gen(weight_3[i][j],all_one)));
+
+//             }
+            
+//             layer_3[i] = sc.APC(layer_3[i],sc.number_gen(bias_3[i],all_one));
+            
+//         }
+//         for(int j=0;j<3;j++){
+//             answer1 = 0;
+//             answer2 = 0;
+//             for(int i = 0; i< bit_len; i++){
+//                 if (layer_3[j].h[i] == true){
+//                     answer1 += 1;
+//                 }
+//                 if (layer_3[j].l[i] == true){
+//                     answer2 += 1;
+//                 }
+//             }
+//             temp = (2*answer1/bit_len - 1)/(2*answer2/bit_len - 1);
+//             cout<<temp<<endl;
+//             if(j==0){
+//                 max = temp;
+//                 max_cand = 0;
+//             }
+//             else{
+//                 if(temp > max){
+//                     max = temp;
+//                     max_cand = j;
+//                 }
+//             }
+
+//         }
+//         cout<<max_cand<<endl;
+//         if(max_cand == corr_answer[k]){
+//             corr_count += 1;
+//             cout<<"correct!!!!!("<<corr_count<<'/'<<k+1<<')'<<endl;
+//         }
+//         else{
+//             cout<<"wrong!!!!!("<<corr_count<<'/'<<k+1<<')'<<endl;
+//         }
+
+//     }
+    
+//     cout<<"The rate of correctness is: "<<corr_count/30.0<<endl;
+//     return 0;
+// }
