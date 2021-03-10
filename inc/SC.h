@@ -14,6 +14,7 @@
 #include <time.h>
 using namespace std;
 const int bit_len = 200000;
+const double lr = 0.01;
 
 struct ESL{  //數字struct，一個存分子一個存分母
     bool *h;
@@ -28,7 +29,7 @@ public:
     double print(ESL);
     double print(bool*);
     bool* bit_gen(double);
-    ESL number_gen(double , bool*);
+    ESL number_gen(double);
     bool* XNOR(bool*, bool*);
     ESL APC(ESL, ESL);
     bool* APC(bool*, bool*);
@@ -36,6 +37,9 @@ public:
     ESL ESL_Multiplier(ESL, ESL);
     ESL ESL_Adder(ESL, ESL);
     bool* ReLU(bool*);
+    ESL ReLU_grad(ESL);
+    bool* ReLU_grad(bool*);
+    ESL ToESL(bool*);
 };
 
 
