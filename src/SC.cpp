@@ -57,7 +57,7 @@ bool* SC::bit_gen(double number){
     return bit_stream;
 }
 
-ESL SC::number_gen(double number, bool *all_one){ //分母先都初始化為一
+ESL SC::number_gen(double number){ //分母先都初始化為一
     ESL output;
     output.h = new bool[bit_len];
     output.l = new bool[bit_len];
@@ -206,4 +206,29 @@ bool* SC::ReLU(bool* a){
         }
     }
     return out;
+}
+
+ESL SC::ReLU_grad(ESL a){
+    if (print(a) < 0){
+        return number_gen(0);
+    }
+    else{
+        return number_gen(1);
+    }
+}
+
+bool* SC::ReLU_grad(bool* a){
+    if (print(a) < 0){
+        return bit_gen(0);
+    }
+    else{
+        return bit_gen(1);
+    }
+}
+
+ESL SC::ToESL(bool* a){
+    ESL output;
+    output.h = a;
+    output.l = bit_gen(1);
+    return output;
 }
