@@ -40,6 +40,10 @@ public:
     ESL ReLU_grad(ESL);
     bool* ReLU_grad(bool*);
     ESL ToESL(bool*);
+    ESL ReLU(ESL);
+    ESL NEW_APC(bool*, bool*);
+    ESL NEW_APC(ESL, ESL);
+    bool* NEW_APC_B(bool*, bool*);
 };
 
 
