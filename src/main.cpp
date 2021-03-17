@@ -245,7 +245,7 @@ int train_label[120] = {
 
     float corr_count = 0;
     float max=0,temp=0,max_cand=0;
-    sc.APC(layer_0[0],layer_1[0]);
+    sc.NEW_APC(layer_0[0],layer_1[0]);
 
 for(int k=0;k<50;k++){
     cout << "forward processing!" << k << "th epoch" << endl;
@@ -256,7 +256,7 @@ for(int k=0;k<50;k++){
 
         for(int i=0;i<10;i++){
             for(int j=0;j<4;j++){
-                layer_1[i] = sc.APC(layer_1[i] ,sc.ESL_Multiplier(layer_0[j],sc.number_gen(weight_1[i][j])));
+                layer_1[i] = sc.NEW_APC(layer_1[i] ,sc.ESL_Multiplier(layer_0[j],sc.number_gen(weight_1[i][j])));
             }
             sc.APC(layer_1[i],sc.number_gen(bias_1[i]));
             // if (sc.print(layer_1[i]) > 1){
@@ -419,3 +419,79 @@ for(int k=0;k<50;k++){
     cout<<"The rate of correctness is: "<<corr_count/30.0<<endl;
     return 0;
 }
+//     for(int k=0;k<30;k++){
+//         for(int i=0;i<4;i++){
+//             layer_0[i] = sc.number_gen(x_test[k][i],all_one);
+//         }
+            
+//         for(int i=0;i<10;i++){
+//             layer_1[i] = sc.number_gen(0,all_one);
+//         }
+//         for(int i=0;i<5;i++){
+//             layer_2[i] = sc.number_gen(0,all_one);
+//         }
+//         for(int i=0;i<3;i++){
+//             layer_3[i] = sc.number_gen(0,all_one);
+//         }
+
+//         for(int i=0;i<10;i++){
+//             for(int j=0;j<4;j++){
+//                 layer_1[i] = sc.APC(layer_1[i] ,sc.ESL_Multiplier(layer_0[j],sc.number_gen(weight_1[i][j],all_one)));
+//             }
+//             sc.APC(layer_1[i],sc.number_gen(bias_1[i],all_one));
+//         }
+    
+//         for(int i=0;i<5;i++){
+//             for(int j=0;j<10;j++){
+//                 layer_2[i] = sc.APC(layer_2[i] ,sc.ESL_Multiplier(layer_1[j],sc.number_gen(weight_2[i][j],all_one)));
+//             }
+//             layer_2[i] = sc.APC(layer_2[i],sc.number_gen(bias_2[i],all_one));
+//             cout<<"layer2 i = "<<i<<' '<<sc.print(layer_2[i])<<endl;
+//         }
+        
+//         for(int i=0;i<3;i++){
+//             for(int j=0;j<5;j++){
+//                 layer_3[i] = sc.APC(layer_3[i] ,sc.ESL_Multiplier(layer_2[j],sc.number_gen(weight_3[i][j],all_one)));
+
+//             }
+            
+//             layer_3[i] = sc.APC(layer_3[i],sc.number_gen(bias_3[i],all_one));
+            
+//         }
+//         for(int j=0;j<3;j++){
+//             answer1 = 0;
+//             answer2 = 0;
+//             for(int i = 0; i< bit_len; i++){
+//                 if (layer_3[j].h[i] == true){
+//                     answer1 += 1;
+//                 }
+//                 if (layer_3[j].l[i] == true){
+//                     answer2 += 1;
+//                 }
+//             }
+//             temp = (2*answer1/bit_len - 1)/(2*answer2/bit_len - 1);
+//             cout<<temp<<endl;
+//             if(j==0){
+//                 max = temp;
+//                 max_cand = 0;
+//             }
+//             else{
+//                 if(temp > max){
+//                     max = temp;
+//                     max_cand = j;
+//                 }
+//             }
+
+//         }
+//         cout<<max_cand<<endl;
+//         if(max_cand == corr_answer[k]){
+//             corr_count += 1;
+//             cout<<"correct!!!!!("<<corr_count<<'/'<<k+1<<')'<<endl;
+//         }
+//         else{
+//             cout<<"wrong!!!!!("<<corr_count<<'/'<<k+1<<')'<<endl;
+//         }
+
+//     }
+    
+//     cout<<"The rate of correctness is: "<<corr_count/30.0<<endl;
