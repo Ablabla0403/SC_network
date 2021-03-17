@@ -18,18 +18,16 @@ int main(int argc,char** argv){
         all_zero[i] = false;
     }
 
-    // ESL w,x,y,z,out1,out2,a;
-    // double answer1 = 0,answer2 = 0;
-    // x = sc.number_gen(0.3,all_one); //error here!!!
-    // y = sc.number_gen(0.6,all_one);
-    // z = sc.number_gen(0.6,all_one);
-    // w = sc.number_gen(3,all_one);
-    // cout<<"numnber generated"<<endl;
-    // out1 = sc.APC(x,y);
-    // out2 = sc.ESL_Multiplier(w,z);
-    // a = sc.ESL_Multiplier(out1,out2);
+    ESL x, y;
+    ESL out1;
+    double answer1 = 0,answer2 = 0;
+    int count1 = 0, count2 = 0;
+    x = sc.number_gen(0.2); //error here!!!
+    y = sc.number_gen(0.5);
 
-    // cout<<"out1 = "<<sc.print(out1)<<endl;
+    cout<<"count1: " << count1 << "\n" << "count2: " << count2 << endl;
+    out1 = sc.NEW_APC(x,y);
+    cout<<"out1 = "<<sc.print(out1)<<endl;
     
     double weight_1[10][4] = {{-0.0036, -0.8222,  1.1428,  0.8296},
         { 0.6314,  1.0744, -0.6075, -0.9300},
@@ -223,11 +221,11 @@ int train_label[120] = {
         
     ESL layer_0[4];
     for(size_t i=0; i<4; i++){
-        layer_0[i] = sc.number_gen(0,all_one);
+        layer_0[i] = sc.number_gen(0);
     } 
     ESL layer_1[10];
     for(size_t i=0; i<10; i++){
-        layer_1[i] = sc.number_gen(0,all_one);
+        layer_1[i] = sc.number_gen(0);
     } 
     bool* layer_1_1[10];
     for(size_t i=0; i<10; i++){
@@ -244,20 +242,20 @@ int train_label[120] = {
 
     float corr_count = 0;
     float max=0,temp=0,max_cand=0;
-    sc.APC(layer_0[0],layer_1[0]);
+    sc.NEW_APC(layer_0[0],layer_1[0]);
 
 for(int k=0;k<120;k++){
         for(int i=0; i<4; i++){
-            layer_0[i] = sc.number_gen(train_data[k][i],all_one);
+            layer_0[i] = sc.number_gen(train_data[k][i]);
         }
             
 
         for(int i=0;i<10;i++){
             for(int j=0;j<4;j++){
-                layer_1[i] = sc.APC(layer_1[i] ,sc.ESL_Multiplier(layer_0[j],sc.number_gen(weight_1[i][j],all_one)));
+                layer_1[i] = sc.NEW_APC(layer_1[i] ,sc.ESL_Multiplier(layer_0[j],sc.number_gen(weight_1[i][j])));
             }
             
-            sc.APC(layer_1[i],sc.number_gen(bias_1[i],all_one));
+            layer_1[i] = sc.NEW_APC(layer_1[i],sc.number_gen(bias_1[i]));
             if (sc.print(layer_1[i]) > 1){
                 layer_1_1[i] = all_one;
             }
@@ -267,24 +265,24 @@ for(int k=0;k<120;k++){
             else{
                 layer_1_1[i] = sc.bit_gen(sc.print(layer_1[i]));
             }
-            layer_1_1[i] = sc.ReLU(layer_1_1[i]);
+            //layer_1_1[i] = sc.ReLU(layer_1_1[i]);
         }
 
 
     
         for(int i=0;i<5;i++){
             for(int j=0;j<10;j++){
-                layer_2[i] = sc.APC(sc.XNOR(layer_1_1[j],layer_2[i]),layer_2[i]);
+                layer_2[i] = sc.NEW_APC_B(sc.XNOR(layer_1_1[j],layer_2[i]),layer_2[i]);
             }
-            layer_2[i] = sc.APC(layer_2[i],sc.bit_gen(bias_2[i]));
+            layer_2[i] = sc.NEW_APC_B(layer_2[i],sc.bit_gen(bias_2[i]));
             cout<<"layer2 i = "<<i<<' '<<sc.print(layer_2[i])<<endl;
         }
         
         for(int i=0; i<3; i++){
             for(int j=0;j<5;j++){
-                layer_3[i] = sc.APC(layer_3[i] ,sc.XNOR(layer_2[j],sc.bit_gen(weight_3[i][j])));
+                layer_3[i] = sc.NEW_APC_B(layer_3[i] ,sc.XNOR(layer_2[j],sc.bit_gen(weight_3[i][j])));
             }   
-            layer_3[i] = sc.APC(layer_3[i],sc.bit_gen(bias_3[i]));    
+            layer_3[i] = sc.NEW_APC_B(layer_3[i],sc.bit_gen(bias_3[i]));    
         }
         int answer1;
         for(int j=0; j<3; j++){
@@ -398,5 +396,3 @@ for(int k=0;k<120;k++){
 //     }
     
 //     cout<<"The rate of correctness is: "<<corr_count/30.0<<endl;
-//     return 0;
-// }
