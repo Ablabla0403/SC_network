@@ -35,6 +35,7 @@ double SC::print(bool* a){
         }
     }
     return to_bipolar(count);
+    
 }
 
 
@@ -57,7 +58,7 @@ bool* SC::bit_gen(double number){
     return bit_stream;
 }
 
-ESL SC::number_gen(double number, bool *all_one){ //分母先都初始化為一
+ESL SC::number_gen(double number){ //分母先都初始化為一
     ESL output;
     output.h = new bool[bit_len];
     output.l = new bool[bit_len];
@@ -99,7 +100,7 @@ bool* SC::APC(bool* a, bool* b){
             count ++;
         }
         else if(b[i] == true){
-            count++;
+            count ++;
         }
     }
     if(count > bit_len){
@@ -145,6 +146,71 @@ ESL SC::APC(ESL a, ESL b){
     return output;
 }
 
+ESL SC::NEW_APC(bool* a, bool* b){
+    ESL output;
+    bool* h = new bool[bit_len];
+    bool* l = bit_gen(0.5);
+    int counter;
+    int count = 0;
+    for(int i=0; i<bit_len; i++){
+        if(i % 2 == 0){
+            if(a[i] == true && b[i] == true){
+                h[i] = true;
+                count++;
+            }
+            else{
+                h[i] = false;
+            }
+        }
+        else{
+            if(a[i] == false && b[i] == false){
+                h[i] = false;
+            }
+            else{
+                h[i] = true;
+                count++;
+            }
+        }
+    }
+    output.h = h;
+    output.l = l;
+
+    return output;  
+}
+
+bool* SC::NEW_APC_B(bool* a, bool* b){
+    bool* h = new bool[bit_len];
+    int counter;
+    int count = 0;
+    for(int i=0; i<bit_len; i++){
+        if(i % 2 == 0){
+            if(a[i] == true && b[i] == true){
+                h[i] = true;
+                count++;
+            }
+            else{
+                h[i] = false;
+            }
+        }
+        else{
+            if(a[i] == false && b[i] == false){
+                h[i] = false;
+            }
+            else{
+                h[i] = true;
+                count++;
+            }
+        }
+    }
+
+    return bit_gen(print(h)*2);  
+}
+
+ESL SC::NEW_APC(ESL a, ESL b){
+    ESL output;
+    output.l = XNOR(XNOR(a.l, b.l), bit_gen(0.5));
+    output.h = NEW_APC(XNOR(a.h, b.l), XNOR(a.l, b.h)).h;
+}
 
 bool* SC::MUX(bool* a, bool* b){
 
@@ -205,5 +271,35 @@ bool* SC::ReLU(bool* a){
             }
         }
     }
+    return out;
+}
+
+ESL SC::ReLU(ESL a){
+    ESL out;
+    bool* out_l = bit_gen(1);
+    bool* out_h = new bool[bit_len];
+    double r = (double)rand() / (RAND_MAX );
+    int counter = 0;
+    for (int i = 0; i < bit_len; i++){
+        if (a.h[i] == 1){
+            counter ++;
+        }
+        else{
+            counter --;
+        }
+        if (counter >= 0){
+            out_h[i] = a.h[i];
+        }
+        else{
+            if (r > 0.5){
+                out_h[i] = 1;
+            }
+            else{
+                out_h[i] = 0;
+            }
+        }
+    }
+    out.h = out_h;
+    out.l = out_l;
     return out;
 }
