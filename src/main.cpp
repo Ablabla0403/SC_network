@@ -220,7 +220,7 @@ int main(int argc,char** argv){
         2, 0, 2, 2, 0, 1, 1, 2, 1, 2, 0, 2, 1, 2, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 0, 1, 2, 2, 0, 2, 0, 1, 2, 2, 1, 2, 1,
         1, 2, 2, 0, 1, 2, 0, 1, 2};
   
-
+    cout << "s";
         
     ESL layer_0[4];
     for(size_t i=0; i<4; i++){
@@ -244,6 +244,7 @@ int main(int argc,char** argv){
     double temp = 0;
 
     //sc.NEW_APC(layer_0[0],layer_1[0]);
+
 
 for(int k=0; k<50; k++){
     // cout << "forward processing!" << k << "th epoch" << endl;
@@ -280,8 +281,6 @@ for(int k=0; k<50; k++){
                 layer_3[i] = sc.number_gen(0);
             }   
         }
-
-
         ESL deltas_3[3], deltas_2[5], deltas_1[10], delta_0[4];
         ESL delta_w, tmp;
         ESL v3[3], v2[5], v1[10], v0[4];
@@ -447,7 +446,7 @@ for(int k=0; k<50; k++){
         
         max = sc.print(layer_3[0]);
         max_cand = 0;
-        
+
         for(size_t j=0; j<3;j++){
             if(sc.print(layer_3[j]) > max){
                 max = sc.print(layer_3[j]);
