@@ -12,9 +12,8 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <time.h>
+
 using namespace std;
-const int bit_len = 500000;
-const double lr = 0.0001;
 
 struct ESL{  //數字struct，一個存分子一個存分母
     bool *h;

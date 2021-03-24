@@ -5,7 +5,10 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <time.h>
-#include "SC.h"
+#include <definition.h>
+#include <SC.h>
+
+
 using namespace std;
 
 
@@ -297,6 +300,7 @@ ESL SC::ToESL(bool* a){
     output.h = a;
     output.l = bit_gen(1);
     return output;
+}
 
 // ESL SC::ReLU(ESL a){
 //     ESL out;
