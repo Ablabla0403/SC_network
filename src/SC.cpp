@@ -277,6 +277,37 @@ bool* SC::ReLU(bool* a){
     return out;
 }
 
+bool SC::CMP(bool* a){
+    double r = (double)rand() / (RAND_MAX );
+    int counter = 0;
+    for (int i = 0; i < bit_len; i++){
+        if (a[i] == 1){
+            counter ++;
+        }
+        else{
+            counter --;
+        }
+    }
+    if(counter > 0){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+bool SC::CMP(ESL a){
+    if(CMP(a.h) > 0 && CMP(a.l) > 0){
+        return true;
+    }
+    else if(CMP(a.h) < 0 && CMP(a.l) < 0){
+        return true;
+    } 
+    else{
+        return false;
+    }
+}
+
 ESL SC::ReLU_grad(ESL a){
     if (print(a) < 0){
         return number_gen(0);

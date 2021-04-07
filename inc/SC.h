@@ -43,6 +43,8 @@ public:
     ESL NEW_APC(bool*, bool*);
     ESL NEW_APC(ESL, ESL);
     bool* NEW_APC_B(bool*, bool*);
+    bool CMP(bool*);
+    bool CMP(ESL);
 };
 
 
