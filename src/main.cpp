@@ -19,7 +19,6 @@ int main(int argc,char** argv){
         all_one[i] = true;
         all_zero[i] = false;
     }
-
     // ESL w,x,y,z,out1,out2,a;
     // double answer1 = 0,answer2 = 0;
     // x = sc.number_gen(0.3); //error here!!!
@@ -33,34 +32,17 @@ int main(int argc,char** argv){
 
     // cout<<"out1 = "<<sc.print(out1)<<endl;
 
-    double weight_1[10][4] = {{-0.0036, -0.8222,  1.1428,  0.8296},
-        { 0.6314,  1.0744, -0.6075, -0.9300},
-        {-0.5994,  0.3998, -0.5392, -0.5632},
-        {-0.3951, -0.5440,  0.9229,  0.6974},
-        { 0.2935, -0.5858,  0.5480,  0.7649},
-        {-0.3082,  0.0779, -0.1027,  0.5359},
-        {-0.5498, -1.0539,  0.1032,  0.6222},
-        { 0.3159,  1.2263, -1.0419, -1.1550},
-        { 0.3984,  0.8920, -0.9523, -0.9732},
-        {-0.6400, -1.2013,  0.8489,  0.8327}};
-    double bias_1[10] = {-0.4965,  0.8319,  0.3620, -1.0174,  0.1545, -0.0132, -0.7016,  0.2359,
-         0.0676, -0.8299};
-    double weight_2[5][10] = {{-7.9623e-01,  1.1132e+00,  2.6681e-01, -1.1179e+00, -9.5079e-01,
-         -1.7036e-01, -6.6915e-01,  5.8790e-01,  1.2805e+00, -1.1847e+00},
-        { 7.4836e-01, -7.3824e-01, -4.6857e-01,  7.5429e-01,  4.6071e-01,
-         -1.5590e-01,  2.8225e-01, -3.9838e-01, -1.6447e+00,  4.3118e-01},
-        {-7.0173e-01,  5.2113e-01,  2.9718e-01, -8.2672e-01, -4.9541e-01,
-         -5.4771e-02, -5.2749e-02,  5.4581e-01,  9.2271e-01, -2.8102e-01},
-        {-1.9237e-01,  7.9316e-01, -1.8080e-01, -7.0296e-01,  1.7126e-01,
-         -2.8067e-01, -6.8195e-01,  5.8475e-01,  8.8074e-01, -8.1795e-01},
-        { 4.4365e-01, -7.3126e-01, -5.9054e-01,  8.3146e-01,  7.9397e-01,
-          1.4095e-03,  1.6442e-01, -5.3120e-01, -1.2742e+00,  7.2953e-01}};
-    double bias_2[5] = {0.2280, -0.2295,  0.1262,  0.3017, -0.0261};
-    double weight_3[3][5] = {{ 0.7964, -0.9222,  0.7322,  0.1037, -0.9549},
-        { 0.7318, -0.2856,  0.2709,  1.0410, -0.2754},
-        {-0.8330,  0.7460, -0.6412, -0.8243,  0.6237}};
-    double bias_3[3] =  {0.4752, -0.0459, -0.1071}; 
-
+    double weight_1[5][4] = {{-0.3804129362106323,-0.37114331126213074,0.8303319215774536,0.16184033453464508},
+{-0.19719482958316803,0.27227601408958435,-0.2307799756526947,0.5072917342185974},
+{-0.04620835930109024,-0.27105242013931274,0.6604450941085815,0.27511030435562134},
+{0.48954474925994873,0.5485999584197998,-1.011638879776001,-0.8703153133392334},
+{-0.3655585050582886,-0.5698899626731873,-0.10470953583717346,-0.4290408194065094}};
+    double bias_1[5] = {-0.6307538747787476,-0.39018914103507996,0.0047127800062298775,0.8436948657035828,-0.22508001327514648};
+    double weight_2[3][5] = {{-0.3455176055431366,0.09025055915117264,-0.908238410949707,1.0499064922332764,-0.1953541785478592},
+{-0.24558530747890472,-0.8246695399284363,0.3368110954761505,0.4846094846725464,0.13430961966514587},
+{0.2632875442504883,-0.01282222755253315,0.09856744110584259,-0.38108205795288086,-0.09605202078819275}};
+    double bias_2[3] = {-0.03043883852660656,0.5267519950866699,-0.0069250017404556274};
+    
     double x_test[30][4] = {{6.1000, 2.8000, 4.7000, 1.2000},
         {5.7000, 3.8000, 1.7000, 0.3000},
         {7.7000, 2.6000, 6.9000, 2.3000},
@@ -220,252 +202,191 @@ int main(int argc,char** argv){
         2, 0, 2, 2, 0, 1, 1, 2, 1, 2, 0, 2, 1, 2, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 0, 1, 2, 2, 0, 2, 0, 1, 2, 2, 1, 2, 1,
         1, 2, 2, 0, 1, 2, 0, 1, 2};
   
-    cout << "s";
-        
+    bool* aa;
+    bool* bb;
+    bool* cc;
+    double summention = 0;
+    for(int i = 0;i < 10000; i++){
+        double r1 = (double)rand() / (RAND_MAX + 1.0);
+        aa = sc.bit_gen(2.0*r1-1);
+        double r2 = (double)rand() / (RAND_MAX + 1.0);
+        bb = sc.bit_gen(2.0*r2-1);
+        cc = sc.MUX(aa,bb);
+        summention += abs(sc.print(cc) - (r1 + r2) / 2.0);
+    }
+    cout<<"error = "<<summention/10000.0<<endl;
+
     ESL layer_0[4];
     for(size_t i=0; i<4; i++){
         layer_0[i] = sc.number_gen(0);
     } 
+
     ESL layer_1[10];
     for(size_t i=0; i<10; i++){
         layer_1[i] = sc.number_gen(0);
     } 
-    ESL layer_2[5];
+
+    ESL layer_2[3];
     for(size_t i=0; i<5; i++){
         layer_2[i] = sc.number_gen(0);
     } 
-    ESL layer_3[3];
-    for(size_t i=0; i<3; i++){
-        layer_3[i] = sc.number_gen(0);
-    } 
+
+    double _layer_0[4];
+    double _layer_1[10];
+    double _layer_2[3];
+
+    double store_layer_1[30][10];
 
     float corr_count = 0;
     float max = 0, max_cand = 0;
     double temp = 0;
 
-    //sc.NEW_APC(layer_0[0],layer_1[0]);
-
-
-for(int k=0; k<50; k++){
-    // cout << "forward processing!" << k << "th epoch" << endl;
-        for(int i=0; i<4; i++){
-            layer_0[i] = sc.number_gen(train_data[k][i]);
+    //-----------------------------
+    corr_count = 0;
+    for(int k=0; k<30; k++){
+        for(int i=0;i<4;i++){
+            _layer_0[i] = x_test[k][i];
         }
-            
-
-        for(int i=0; i<10; i++){
-            for(int j=0; j<4; j++){
-                layer_1[i] = sc.NEW_APC(layer_1[i] ,sc.ESL_Multiplier(layer_0[j],sc.number_gen(weight_1[i][j])));
-            }
-            if(sc.print(layer_1[i]) < 0){
-                layer_1[i] = sc.number_gen(0);
-            }
+        for(int i=0;i<5;i++){
+            _layer_1[i] = 0;
+        }
+        for(int i=0;i<3;i++){
+            _layer_2[i] = 0;
         }
 
 
+        for(int i=0;i<5;i++){
+            for(int j=0;j<4;j++){
+                _layer_1[i] += _layer_0[j] * weight_1[i][j];
+            }
+            store_layer_1[k][i]=_layer_1[i];
+            _layer_1[i] += bias_1[i];
+        }
     
-        for(int i=0; i<5; i++){
-            for(int j=0; j<10; j++){
-                layer_2[i] = sc.NEW_APC(layer_2[i] ,sc.ESL_Multiplier(layer_1[j],sc.number_gen(weight_2[i][j])));
+        for(int i=0;i<3;i++){
+            for(int j=0;j<5;j++){
+                _layer_2[i] += _layer_1[j] * weight_2[i][j];
             }
-            if(sc.print(layer_2[i]) < 0){
-                layer_2[i] = sc.number_gen(0);
-            }
+            _layer_2[i] += bias_2[i];
         }
         
-        for(int i=0; i<3; i++){
-            for(int j=0; j<5; j++){
-                layer_3[i] = sc.NEW_APC(layer_3[i] ,sc.ESL_Multiplier(layer_2[j],sc.number_gen(weight_3[i][j])));
-            }   
-            if(sc.print(layer_3[i]) < 0){
-                layer_3[i] = sc.number_gen(0);
-            }   
-        }
-        ESL deltas_3[3], deltas_2[5], deltas_1[10], delta_0[4];
-        ESL delta_w, tmp;
-        ESL v3[3], v2[5], v1[10], v0[4];
-        ESL tmp_hidden;
-
-        //layer3
-        for(size_t i=0; i<3; i++){
-            v3[i] = sc.number_gen(0);
-            for(size_t j=0; j<5; j++){
-                v3[i] = sc.NEW_APC(v3[i], sc.ESL_Multiplier(sc.number_gen(weight_3[i][j]), layer_2[j]));
-            }
-        }
-
-        if(train_label[k] == 0){
-            for(size_t i=0; i<3; i++){
-                if(i == 0){
-                    deltas_3[i] = sc.NEW_APC(sc.number_gen(10), sc.ESL_Multiplier(sc.number_gen(-1), layer_3[i])); 
-                }
-                else{
-                    deltas_3[i] = sc.NEW_APC(sc.number_gen(2), sc.ESL_Multiplier(sc.number_gen(-1), layer_3[i]));
-                }
-
-                if(sc.print(deltas_3[i]) < 0){
-                    deltas_3[i] = sc.number_gen(0);
-                }
-                for(size_t j=0; j<5; j++){
-                    delta_w = sc.ESL_Multiplier(deltas_3[i],layer_2[j]);
-                    weight_3[i][j] += lr * sc.print(delta_w);
-                }
-            }
-        }
-        else if(train_label[k] == 1){
-            for(size_t i=0; i<3; i++){
-                if(i == 1){
-                    deltas_3[i] = sc.NEW_APC(sc.number_gen(10), sc.ESL_Multiplier(sc.number_gen(-1), layer_3[i])); 
-                }
-                else{
-                    deltas_3[i] = sc.NEW_APC(sc.number_gen(2), sc.ESL_Multiplier(sc.number_gen(-1), layer_3[i]));
-                }
-
-                if(sc.print(deltas_3[i]) < 0){
-                    deltas_3[i] = sc.number_gen(0);
-                }
-                for(size_t j=0; j<5; j++){
-                    delta_w = sc.ESL_Multiplier(deltas_3[i],layer_2[j]);
-                    weight_3[i][j] += lr * sc.print(delta_w);
-                }
-            }
-        }
-        else if(train_label[k] == 2){
-            for(size_t i=0; i<3; i++){
-                if(i == 2){
-                    deltas_3[i] = sc.NEW_APC(sc.number_gen(10), sc.ESL_Multiplier(sc.number_gen(-1), layer_3[i])); 
-                }
-                else{
-                    deltas_3[i] = sc.NEW_APC(sc.number_gen(2), sc.ESL_Multiplier(sc.number_gen(-1), layer_3[i]));
-                }
-
-                if(sc.print(deltas_3[i]) < 0){
-                    deltas_3[i] = sc.number_gen(0);
-                }
-                for(size_t j=0; j<5; j++){
-                    delta_w = sc.ESL_Multiplier(deltas_3[i],layer_2[j]);
-                    weight_3[i][j] += lr * sc.print(delta_w);
-                }
-            }
-        }
-
         
+        
+        max = -10000;
+        max_cand = 0;
 
-        //layer2
-        for(size_t i=0; i<5; i++){
-            v2[i] = sc.number_gen(0);
-            for(size_t j=0; j<10; j++){
-                v2[i] = sc.NEW_APC(v2[i], sc.ESL_Multiplier(sc.number_gen(weight_2[i][j]), layer_1[j]));
+        for(size_t j=0; j<3;j++){
+            if(_layer_2[j] > max){
+                max = _layer_2[j];
+                max_cand = j;
             }
+            // cout << "layer 2[" << j << "] is :" << _layer_2[j] <<endl;
+            // cout << "max cand is : " << max_cand << endl;
+        }
+        // cout<<max_cand<<endl;
+
+        if(max_cand == corr_answer[k]){
+            corr_count += 1;
+            // cout<<"correct!!!!!("<<corr_count<<'/'<<k+1<<')'<<endl;
+        }
+        else{
+            // cout<<"wrong!!!!!("<<corr_count<<'/'<<k+1<<')'<<endl;
         }
 
-        for(size_t i=0; i<5; i++){
-            tmp_hidden = sc.number_gen(0);
-            for(size_t j=0; j<3; j++){
-                tmp_hidden = sc.NEW_APC(tmp_hidden, sc.ESL_Multiplier(deltas_3[j], sc.number_gen(weight_3[j][i])));
-            }
-            if(sc.print(tmp_hidden) < 0){
-                tmp_hidden = sc.number_gen(0);
-            }
-            // deltas_2[i] = sc.ESL_Multiplier(tmp_hidden, sc.ReLU_grad(v2[i]));
-            for(size_t j=0; j<10; j++){
-                delta_w = sc.ESL_Multiplier(tmp_hidden, layer_1[j]);
-                weight_2[i][j] += lr * sc.print(delta_w);
-            }
-        }
-
-        //layer1
-        for(size_t i=0; i<10; i++){
-            v1[i] = sc.number_gen(0);
-            for(size_t j=0; j<4; j++){
-                v1[i] = sc.NEW_APC(v1[i], sc.ESL_Multiplier(sc.number_gen(weight_1[i][j]), layer_0[j]));
-            }
-        }
-
-        for(size_t i=0; i<10; i++){
-            tmp_hidden = sc.number_gen(0);
-            for(size_t j=0; j<5; j++){
-                tmp_hidden = sc.NEW_APC(tmp_hidden, sc.ESL_Multiplier(deltas_2[j], sc.number_gen(weight_2[j][i])));
-            }
-            if(sc.print(tmp_hidden) < 0){
-                tmp_hidden = sc.number_gen(0);
-            }
-            // deltas_1[i] = sc.ESL_Multiplier(tmp_hidden, sc.ReLU_grad(v1[i]));
-            for(size_t j=0; j<4; j++){
-                delta_w = sc.ESL_Multiplier(tmp_hidden, layer_0[j]);
-                weight_1[i][j] += lr * sc.print(delta_w);
-            }
-        }
     }
+    cout<<"The rate of correctness is: "<<corr_count/30.0<<endl;
     
-    cout << "training finished" << endl;
+    //----------------------------------------------------------------------------------
+    corr_count = 0;
 
     for(int k=0; k<30; k++){
         for(int i=0;i<4;i++){
             layer_0[i] = sc.number_gen(x_test[k][i]);
         }
             
-        for(int i=0;i<10;i++){
+        for(int i=0;i<5;i++){
             layer_1[i] = sc.number_gen(0);
         }
-        for(int i=0;i<5;i++){
+
+        for(int i=0;i<3;i++){
             layer_2[i] = sc.number_gen(0);
         }
-        for(int i=0;i<3;i++){
-            layer_3[i] = sc.number_gen(0);
-        }
 
-        for(int i=0;i<10;i++){
-            for(int j=0;j<4;j++){
-                layer_1[i] = sc.NEW_APC(layer_1[i] ,sc.ESL_Multiplier(layer_0[j],sc.number_gen(weight_1[i][j])));
-            }
-            if(sc.print(layer_1[i]) < 0){
-                layer_1[i] = sc.number_gen(0);
-            }
+
+        for(int i=0;i<5;i++){
+            // for(int j=0;j<4;j++){
+            //     layer_1[i] = sc.NEW_APC(layer_1[i] ,sc.ESL_Multiplier(layer_0[j],sc.number_gen(weight_1[i][j])));
+            // }
+            layer_1[i] = sc.ESL_Adder_4(sc.ESL_Multiplier(layer_0[0],sc.number_gen(weight_1[i][0])),sc.ESL_Multiplier(layer_0[1],sc.number_gen(weight_1[i][1])),sc.ESL_Multiplier(layer_0[2],sc.number_gen(weight_1[i][2])),sc.ESL_Multiplier(layer_0[3],sc.number_gen(weight_1[i][3])));
+            // cout<<abs((store_layer_1[k][i]-sc.print(layer_2[i])))<<endl;
+            layer_1[i] = sc.ESL_Adder(layer_1[i],sc.number_gen(bias_1[i]));
         }
     
-        for(int i=0;i<5;i++){
-            for(int j=0;j<10;j++){
-                layer_2[i] = sc.NEW_APC(layer_2[i] ,sc.ESL_Multiplier(layer_1[j],sc.number_gen(weight_2[i][j])));
-            }
-            if(sc.print(layer_2[i]) < 0){
-                layer_2[i] = sc.number_gen(0);
-            }
-        }
-        
         for(int i=0;i<3;i++){
             for(int j=0;j<5;j++){
-                layer_3[i] = sc.NEW_APC(layer_3[i] ,sc.ESL_Multiplier(layer_2[j],sc.number_gen(weight_3[i][j])));
-
+                layer_2[i] = sc.ESL_Adder_5(sc.ESL_Multiplier(layer_1[0],sc.number_gen(weight_2[i][0])),sc.ESL_Multiplier(layer_1[1],sc.number_gen(weight_2[i][1])),sc.ESL_Multiplier(layer_1[2],sc.number_gen(weight_2[i][2])),sc.ESL_Multiplier(layer_1[3],sc.number_gen(weight_2[i][3])),sc.ESL_Multiplier(layer_1[4],sc.number_gen(weight_2[i][4])));
+                
             }
-            if(sc.print(layer_3[i]) < 0){
-                layer_3[i] = sc.number_gen(0);
-            }
+            layer_2[i] = sc.ESL_Adder(layer_2[i],sc.number_gen(bias_2[i]));
             
         }
         
-        max = sc.print(layer_3[0]);
+        
+        max = -10000;
         max_cand = 0;
 
         for(size_t j=0; j<3;j++){
-            if(sc.print(layer_3[j]) > max){
-                max = sc.print(layer_3[j]);
+            if(sc.print(layer_2[j]) > max){
+                max = sc.print(layer_2[j]);
                 max_cand = j;
             }
-            cout << "max cand is : " << max_cand << endl;
+            // cout << "layer 2[" << j << "] is :" << sc.print(layer_2[j]) <<endl;
+            // cout << "max cand is : " << max_cand << endl;
         }
-        cout<<max_cand<<endl;
+        // cout<<max_cand<<endl;
 
         if(max_cand == corr_answer[k]){
             corr_count += 1;
-            cout<<"correct!!!!!("<<corr_count<<'/'<<k+1<<')'<<endl;
+            // cout<<"correct!!!!!("<<corr_count<<'/'<<k+1<<')'<<endl;
         }
         else{
-            cout<<"wrong!!!!!("<<corr_count<<'/'<<k+1<<')'<<endl;
+            // cout<<"wrong!!!!!("<<corr_count<<'/'<<k+1<<')'<<endl;
         }
 
     }
-    
     cout<<"The rate of correctness is: "<<corr_count/30.0<<endl;
+    
     return 0;
 }
+
+
+// tensor([-0.9631,  0.6938,  0.6123])
+// tensor([ 1.3399, -0.0262, -1.3113])
+// tensor([-3.1469,  1.3521,  2.4407])
+// tensor([-0.9443,  0.6709,  0.5969])
+// tensor([-1.3235,  0.7936,  0.9166])
+// tensor([ 1.4078, -0.0593, -1.3668])
+// tensor([-0.2611,  0.4521,  0.0265])
+// tensor([-1.8589,  0.9253,  1.3640])
+// tensor([-1.1522,  0.7259,  0.7746])
+// tensor([-0.4751,  0.5261,  0.2059])
+// tensor([-1.5770,  0.8561,  1.1257])
+// tensor([ 1.6994, -0.1383, -1.6117])
+// tensor([ 1.5930, -0.1107, -1.5214])
+// tensor([ 1.6373, -0.1163, -1.5601])
+// tensor([ 1.6299, -0.1167, -1.5557])
+// tensor([-1.1036,  0.7226,  0.7291])
+// tensor([-2.0739,  1.0130,  1.5401])
+// tensor([-0.4091,  0.5094,  0.1506])
+// tensor([-0.7808,  0.6306,  0.4590])
+// tensor([-1.9807,  0.9781,  1.4632])
+// tensor([ 1.6225, -0.1120, -1.5491])
+// tensor([-1.2994,  0.7756,  0.8930])
+// tensor([ 1.4799, -0.0770, -1.4291])
+// tensor([-1.9350,  0.9688,  1.4249])
+// tensor([-2.5619,  1.1876,  1.9482])
+// tensor([-1.8697,  0.9308,  1.3723])
+// tensor([-2.0575,  1.0202,  1.5287])
+// tensor([-2.2229,  1.0570,  1.6650])
+// tensor([ 1.6081, -0.1197, -1.5350])
+// tensor([ 1.5707, -0.0978, -1.5049])
