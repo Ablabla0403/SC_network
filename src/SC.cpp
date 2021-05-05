@@ -279,6 +279,14 @@ bool* SC::MUX_4(bool* a, bool* b,bool* c, bool* d){
             MUX_output[i] = d[i];
         }
     }
+
+    if(print(MUX_output)*4 > 1){
+        MUX_output = bit_gen(1);
+    }
+    else{
+        MUX_output = bit_gen(print(MUX_output)*4);
+    }
+
     return MUX_output;
 }
 
@@ -304,6 +312,14 @@ bool* SC::MUX_5(bool* a, bool* b,bool* c, bool* d,bool* e){
             MUX_output[i] = e[i];
         }
     }
+
+    if(print(MUX_output)*5 > 1){
+        MUX_output = bit_gen(1);
+    }
+    else{
+        MUX_output = bit_gen(print(MUX_output)*5);
+    }
+
     return MUX_output;
 }
 
