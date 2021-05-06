@@ -38,6 +38,7 @@ public:
     bool* MUX(bool*, bool*);
     bool* MUX_4(bool*, bool*,bool*,bool*);
     bool* MUX_5(bool*, bool*,bool*,bool*,bool*);
+    bool* MUX_15(bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*);
     ESL ESL_Multiplier(ESL, ESL);
     ESL ESL_Adder(ESL, ESL);
     ESL ESL_Adder_4(ESL, ESL,ESL,ESL);
