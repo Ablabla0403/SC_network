@@ -257,6 +257,12 @@ bool* SC::MUX(bool* a, bool* b){
         }
         
     }
+    if(print(MUX_output)*2 > 1){
+        MUX_output = bit_gen(1);
+    }
+    else{
+        MUX_output = bit_gen(print(MUX_output)*2);
+    }
     return MUX_output;
 }
 
@@ -323,6 +329,69 @@ bool* SC::MUX_5(bool* a, bool* b,bool* c, bool* d,bool* e){
     return MUX_output;
 }
 
+
+bool* SC::MUX_15(bool* a, bool* b,bool* c, bool* d,bool* e,bool* f, bool* g,bool* h, bool* k,bool* l,bool* m, bool* n,bool* o, bool* p,bool* q){
+
+    bool *MUX_output = new bool[bit_len];
+    for(size_t i = 0; i < bit_len; i++){
+        
+        double r = (double)rand() / (RAND_MAX + 1.0);
+        if(r >= 14.0/15.0){
+            MUX_output[i] = a[i];
+        }
+        else if(r<14.0/15.0 && r >= 13.0/15.0){
+            MUX_output[i] = b[i];
+        }
+        else if(r<13.0/15.0 && r >= 12.0/15.0){
+            MUX_output[i] = c[i];
+        }
+        else if(r<12.0/15.0 && r >= 11.0/15.0){
+            MUX_output[i] = d[i];
+        }
+        else if(r<11.0/15.0 && r >= 10.0/15.0){
+            MUX_output[i] = e[i];
+        }
+        else if(r<10.0/15.0 && r >= 9.0/15.0){
+            MUX_output[i] = f[i];
+        }
+        else if(r<9.0/15.0 && r >= 8.0/15.0){
+            MUX_output[i] = g[i];
+        }
+        else if(r<8.0/15.0 && r >= 7.0/15.0){
+            MUX_output[i] = h[i];
+        }
+        else if(r<7.0/15.0 && r >= 6.0/15.0){
+            MUX_output[i] = k[i];
+        }
+        else if(r<6.0/15.0 && r >= 5.0/15.0){
+            MUX_output[i] = l[i];
+        }
+        else if(r<5.0/15.0 && r >= 4.0/15.0){
+            MUX_output[i] = m[i];
+        }
+        else if(r<4.0/15.0 && r >= 3.0/15.0){
+            MUX_output[i] = n[i];
+        }
+        else if(r<3.0/15.0 && r >= 2.0/15.0){
+            MUX_output[i] = o[i];
+        }
+        else if(r<2.0/15.0 && r >= 1.0/15.0){
+            MUX_output[i] = p[i];
+        }
+        else if(r<1.0/15.0 && r >= 0.0/15.0){
+            MUX_output[i] = q[i];
+        }
+    }
+
+    if(print(MUX_output)*15 > 1){
+        MUX_output = bit_gen(1);
+    }
+    else{
+        MUX_output = bit_gen(print(MUX_output)*15);
+    }
+
+    return MUX_output;
+}
 ESL SC::ESL_Multiplier(ESL a, ESL b){
     ESL out;
     out.h = new bool[bit_len];
