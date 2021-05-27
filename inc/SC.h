@@ -50,6 +50,9 @@ public:
     ESL NEW_APC(bool*, bool*);
     ESL NEW_APC(ESL, ESL);
     bool* NEW_APC_B(bool*, bool*);
+    bool* lin_gain(bool*, int, int);
+    bool* MUX_general(vector<bool*>);
+    bool* TFF_based(bool* a,bool* b);
 };
 
 
