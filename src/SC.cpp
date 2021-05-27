@@ -5,10 +5,8 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <time.h>
-#include <definition.h>
-#include <SC.h>
-
-
+#include "SC.h"
+#include "definition.h"
 using namespace std;
 
 
@@ -86,6 +84,36 @@ bool* SC::XNOR(bool* a, bool* b){
     int count = 0;
     for(int i = 0; i < bit_len; i++){
         if(a[i] == b[i]){
+            XNOR_output[i] = true;
+            count ++;
+        }
+        else{
+            XNOR_output[i] = false;
+        }
+    }
+    return XNOR_output;
+}
+
+bool* SC::XNOR_4(bool* a, bool* b,bool* c, bool* d){
+    bool* XNOR_output = new bool[bit_len];
+    int count = 0;
+    for(int i = 0; i < bit_len; i++){
+        if(a[i] == b[i] == c[i] == d[i]){
+            XNOR_output[i] = true;
+            count ++;
+        }
+        else{
+            XNOR_output[i] = false;
+        }
+    }
+    return XNOR_output;
+}
+
+bool* SC::XNOR_5(bool* a, bool* b, bool* c, bool*d,bool* e){
+    bool* XNOR_output = new bool[bit_len];
+    int count = 0;
+    for(int i = 0; i < bit_len; i++){
+        if(a[i] == b[i] == c[i] == d[i] == e[i]){
             XNOR_output[i] = true;
             count ++;
         }
@@ -229,6 +257,89 @@ bool* SC::MUX(bool* a, bool* b){
         }
         
     }
+    int count = 0;
+    for(size_t i = 0; i < bit_len; i++){
+        if(MUX_output[i] = true){
+            count += 2;
+        }
+        else{
+            if(count > 0){
+                MUX_output[i] = true;
+                count --;
+            }
+        }
+    }
+    return MUX_output;
+}
+
+bool* SC::MUX_4(bool* a, bool* b,bool* c, bool* d){
+
+    bool *MUX_output = new bool[bit_len];
+    for(size_t i = 0; i < bit_len; i++){
+        
+        double r = (double)rand() / (RAND_MAX + 1.0);
+        if(r >= 0.75){
+            MUX_output[i] = a[i];
+        }
+        else if(r<0.75 && r >= 0.5){
+            MUX_output[i] = b[i];
+        }
+        else if(r<0.5 && r >= 0.25){
+            MUX_output[i] = c[i];
+        }
+        else if(r<0.25 && r >= 0.0){
+            MUX_output[i] = d[i];
+        }
+    }
+    int count = 0;
+    for(size_t i = 0; i < bit_len; i++){
+        if(MUX_output[i] = true){
+            count += 4;
+        }
+        else{
+            if(count > 0){
+                MUX_output[i] = true;
+                count --;
+            }
+        }
+    }
+    return MUX_output;
+}
+
+bool* SC::MUX_5(bool* a, bool* b,bool* c, bool* d,bool* e){
+    int count = 0;
+
+    bool *MUX_output = new bool[bit_len];
+    for(size_t i = 0; i < bit_len; i++){
+        
+        double r = (double)rand() / (RAND_MAX + 1.0);
+        if(r >= 0.8){
+            MUX_output[i] = a[i];
+        }
+        else if(r<0.8 && r >= 0.6){
+            MUX_output[i] = b[i];
+        }
+        else if(r<0.6 && r >= 0.4){
+            MUX_output[i] = c[i];
+        }
+        else if(r<0.4 && r >= 0.2){
+            MUX_output[i] = d[i];
+        }
+        else if(r<0.2 && r >= 0.0){
+            MUX_output[i] = e[i];
+        }
+    }
+    for(size_t i = 0; i < bit_len; i++){
+        if(MUX_output[i] = true){
+            count += 5;
+        }
+        else{
+            if(count > 0){
+                MUX_output[i] = true;
+                count --;
+            }
+        }
+    }
     return MUX_output;
 }
 
@@ -251,11 +362,42 @@ ESL SC::ESL_Adder(ESL a, ESL b){
     return out;
 }
 
+ESL SC::ESL_Adder_4(ESL a, ESL b,ESL c,ESL d){
+    ESL out;
+    out.h = new bool[bit_len];
+    out.l = new bool[bit_len];
+    out.h = MUX_4(XNOR_4(a.h,b.l,c.l,d.l),XNOR_4(a.l,b.h,c.l,d.l),XNOR_4(a.l,b.l,c.h,d.l),XNOR_4(a.l,b.l,c.l,d.h));
+    out.l = MUX_4(XNOR_4(a.l,b.l,c.l,d.l),bit_gen(0),bit_gen(0),bit_gen(0));
+    
+    return out;
+}
+
+ESL SC::ESL_Adder_5(ESL a, ESL b,ESL c,ESL d,ESL e){
+    ESL out;
+    out.h = new bool[bit_len];
+    out.l = new bool[bit_len];
+    out.h = MUX_5(XNOR_5(a.h,b.l,c.l,d.l,e.l),XNOR_5(a.l,b.h,c.l,d.l,e.l),XNOR_5(a.l,b.l,c.h,d.l,e.l),XNOR_5(a.l,b.l,c.l,d.h,e.l),XNOR_5(a.l,b.l,c.l,d.l,e.h));
+    out.l = MUX_5(XNOR_5(a.l,b.l,c.l,d.l,e.l),bit_gen(0),bit_gen(0),bit_gen(0),bit_gen(0));
+    
+    return out;
+}
+
+// ESL SC::ESL_Adder(ESL a, ESL b){
+//     ESL out;
+//     out.h = new bool[bit_len];
+//     out.l = new bool[bit_len];
+//     out.h = MUX(XNOR(a.h,b.l),XNOR(a.l,b.h));
+//     out.l = MUX(XNOR(a.l,b.l),bit_gen(0));
+    
+//     return out;
+// }
+
 bool* SC::ReLU(bool* a){
     bool* out = new bool[bit_len];
-    double r = (double)rand() / (RAND_MAX );
+    double r ;
     int counter = 0;
     for (int i = 0; i < bit_len; i++){
+        r = (double)rand() / (RAND_MAX );
         if (a[i] == 1){
             counter ++;
         }
@@ -332,7 +474,6 @@ ESL SC::ToESL(bool* a){
     output.l = bit_gen(1);
     return output;
 }
-
 // ESL SC::ReLU(ESL a){
 //     ESL out;
 //     bool* out_l = bit_gen(1);
@@ -362,3 +503,100 @@ ESL SC::ToESL(bool* a){
 //     out.l = out_l;
 //     return out;
 // }
+
+bool* SC::lin_gain(bool* a, int gain, int tmp){
+
+    float K = 0;
+
+    if(gain == 2){
+        K = -0.35;
+    } 
+    else if(gain == 3){
+        K = 0;
+    }     
+    else if(gain == 4){
+        K = 0.25;
+    }  
+    else if(gain == 5){
+        K = 0.25;
+    }  
+    else if(gain == 8){
+        K = 0.78;
+    }
+    else{
+        cerr << "wrong gain!!";
+    } 
+    
+    bool* z = new bool[bit_len];
+    int S_min = 0;
+    int S_max = bit_len-1; 
+    int S_bound = bit_len/2;
+
+    int S = S_bound;
+    bool* k = bit_gen(K);
+
+    for(size_t i=0; i<bit_len; i++){
+        if(S >= S_bound){
+            if(S == S_max){
+                if(a[i] == 1){
+                    S = S_max;
+                }
+                else{
+                    S = S-1;
+                }   
+            }
+            else{
+                if(a[i] == 1 and k[i] == 0){
+                     S = S;
+                }
+                else if(a[i] == 1 and k[i] == 1){
+                    S = S+1;
+                }  
+                else if(a[i] == 0){
+                    S = S-1;
+                }  
+            }
+                
+        }
+        else{
+            if(S == S_min){
+                if(a[i] == 0){
+                    S = S_min;
+                }
+                else{
+                    S = S+1;
+                } 
+            }
+                
+            else{
+                if(a[i] == 0 and k[i] == 0){
+                    S = S;
+                }  
+                else if(a[i] == 0 and k[i] == 1){
+                    S = S-1;
+                }
+                else if(a[i] == 1){
+                    S = S+1;
+                } 
+            }
+        }
+            
+        if(S >= S_bound){
+            z[i] = 1;
+        }
+        else{
+            z[i] = 0;
+        }
+    }
+    return z;
+}
+
+bool* SC::MUX_general(vector<bool*> bit_streams){
+    bool* output = new bool[bit_len];
+    float r;
+    for(int i = 0; i < bit_len; ++i){
+        r = int((float)rand() / (RAND_MAX) * (float)bit_streams.size()) % bit_streams.size();
+        output[i] = bit_streams[r][i];
+    }
+    return output;
+}
