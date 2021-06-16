@@ -55,7 +55,7 @@ public:
     bool* max_pool(bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*);
     bool* MUX_general(vector<bool*> &);
     bool**** conv2d(bool****, bool****, vector<bool*> &, short, short, short, short, short, short); //added by YEN-JU, to conduct conv2d on a bipolar sc
-    bool** linear(bool**, bool*, vector<bool*> &, bool*, short, short);
+    bool** linear(bool**, bool**, vector<bool*> &, bool*, short, short);
 };
 
 
