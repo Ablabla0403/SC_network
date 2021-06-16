@@ -51,6 +51,11 @@ public:
     ESL NEW_APC(bool*, bool*);
     ESL NEW_APC(ESL, ESL);
     bool* NEW_APC_B(bool*, bool*);
+    bool* TFF_based(bool*,bool*);
+    bool* max_pool(bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*);
+    bool* MUX_general(vector<bool*> &);
+    bool**** conv2d(bool****, bool****, vector<bool*> &, short, short, short, short, short, short); //added by YEN-JU, to conduct conv2d on a bipolar sc
+    bool** linear(bool**, bool*, vector<bool*> &, bool*, short, short);
 };
 
 

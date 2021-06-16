@@ -266,170 +266,8 @@ bool* SC::MUX(bool* a, bool* b){
     return MUX_output;
 }
 
-bool* SC::MUX_4(bool* a, bool* b,bool* c, bool* d){
-
-    bool *MUX_output = new bool[bit_len];
-    for(size_t i = 0; i < bit_len; i++){
-        
-        double r = (double)rand() / (RAND_MAX + 1.0);
-        if(r >= 0.75){
-            MUX_output[i] = a[i];
-        }
-        else if(r<0.75 && r >= 0.5){
-            MUX_output[i] = b[i];
-        }
-        else if(r<0.5 && r >= 0.25){
-            MUX_output[i] = c[i];
-        }
-        else if(r<0.25 && r >= 0.0){
-            MUX_output[i] = d[i];
-        }
-    }
-
-    if(print(MUX_output)*4 > 1){
-        MUX_output = bit_gen(1);
-    }
-    else{
-        MUX_output = bit_gen(print(MUX_output)*4);
-    }
-
-    return MUX_output;
-}
-
-bool* SC::MUX_5(bool* a, bool* b,bool* c, bool* d,bool* e){
-
-    bool *MUX_output = new bool[bit_len];
-    for(size_t i = 0; i < bit_len; i++){
-        
-        double r = (double)rand() / (RAND_MAX + 1.0);
-        if(r >= 0.8){
-            MUX_output[i] = a[i];
-        }
-        else if(r<0.8 && r >= 0.6){
-            MUX_output[i] = b[i];
-        }
-        else if(r<0.6 && r >= 0.4){
-            MUX_output[i] = c[i];
-        }
-        else if(r<0.4 && r >= 0.2){
-            MUX_output[i] = d[i];
-        }
-        else if(r<0.2 && r >= 0.0){
-            MUX_output[i] = e[i];
-        }
-    }
-
-    if(print(MUX_output)*5 > 1){
-        MUX_output = bit_gen(1);
-    }
-    else{
-        MUX_output = bit_gen(print(MUX_output)*5);
-    }
-
-    return MUX_output;
-}
 
 
-bool* SC::MUX_15(bool* a, bool* b,bool* c, bool* d,bool* e,bool* f, bool* g,bool* h, bool* k,bool* l,bool* m, bool* n,bool* o, bool* p,bool* q){
-
-    bool *MUX_output = new bool[bit_len];
-    for(size_t i = 0; i < bit_len; i++){
-        
-        double r = (double)rand() / (RAND_MAX + 1.0);
-        if(r >= 14.0/15.0){
-            MUX_output[i] = a[i];
-        }
-        else if(r<14.0/15.0 && r >= 13.0/15.0){
-            MUX_output[i] = b[i];
-        }
-        else if(r<13.0/15.0 && r >= 12.0/15.0){
-            MUX_output[i] = c[i];
-        }
-        else if(r<12.0/15.0 && r >= 11.0/15.0){
-            MUX_output[i] = d[i];
-        }
-        else if(r<11.0/15.0 && r >= 10.0/15.0){
-            MUX_output[i] = e[i];
-        }
-        else if(r<10.0/15.0 && r >= 9.0/15.0){
-            MUX_output[i] = f[i];
-        }
-        else if(r<9.0/15.0 && r >= 8.0/15.0){
-            MUX_output[i] = g[i];
-        }
-        else if(r<8.0/15.0 && r >= 7.0/15.0){
-            MUX_output[i] = h[i];
-        }
-        else if(r<7.0/15.0 && r >= 6.0/15.0){
-            MUX_output[i] = k[i];
-        }
-        else if(r<6.0/15.0 && r >= 5.0/15.0){
-            MUX_output[i] = l[i];
-        }
-        else if(r<5.0/15.0 && r >= 4.0/15.0){
-            MUX_output[i] = m[i];
-        }
-        else if(r<4.0/15.0 && r >= 3.0/15.0){
-            MUX_output[i] = n[i];
-        }
-        else if(r<3.0/15.0 && r >= 2.0/15.0){
-            MUX_output[i] = o[i];
-        }
-        else if(r<2.0/15.0 && r >= 1.0/15.0){
-            MUX_output[i] = p[i];
-        }
-        else if(r<1.0/15.0 && r >= 0.0/15.0){
-            MUX_output[i] = q[i];
-        }
-    }
-
-    if(print(MUX_output)*15 > 1){
-        MUX_output = bit_gen(1);
-    }
-    else{
-        MUX_output = bit_gen(print(MUX_output)*15);
-    }
-
-    return MUX_output;
-}
-ESL SC::ESL_Multiplier(ESL a, ESL b){
-    ESL out;
-    out.h = new bool[bit_len];
-    out.l = new bool[bit_len];
-    out.h = XNOR(a.h,b.h);
-    out.l = XNOR(a.l,b.l);
-    return out;
-}
-
-ESL SC::ESL_Adder(ESL a, ESL b){
-    ESL out;
-    out.h = new bool[bit_len];
-    out.l = new bool[bit_len];
-    out.h = MUX(XNOR(a.h,b.l),XNOR(a.l,b.h));
-    out.l = MUX(XNOR(a.l,b.l),bit_gen(0));
-    
-    return out;
-}
-
-ESL SC::ESL_Adder_4(ESL a, ESL b,ESL c,ESL d){
-    ESL out;
-    out.h = new bool[bit_len];
-    out.l = new bool[bit_len];
-    out.h = MUX_4(XNOR_4(a.h,b.l,c.l,d.l),XNOR_4(a.l,b.h,c.l,d.l),XNOR_4(a.l,b.l,c.h,d.l),XNOR_4(a.l,b.l,c.l,d.h));
-    out.l = MUX_4(XNOR_4(a.l,b.l,c.l,d.l),bit_gen(0),bit_gen(0),bit_gen(0));
-    
-    return out;
-}
-
-ESL SC::ESL_Adder_5(ESL a, ESL b,ESL c,ESL d,ESL e){
-    ESL out;
-    out.h = new bool[bit_len];
-    out.l = new bool[bit_len];
-    out.h = MUX_5(XNOR_5(a.h,b.l,c.l,d.l,e.l),XNOR_5(a.l,b.h,c.l,d.l,e.l),XNOR_5(a.l,b.l,c.h,d.l,e.l),XNOR_5(a.l,b.l,c.l,d.h,e.l),XNOR_5(a.l,b.l,c.l,d.l,e.h));
-    out.l = MUX_5(XNOR_5(a.l,b.l,c.l,d.l,e.l),bit_gen(0),bit_gen(0),bit_gen(0),bit_gen(0));
-    
-    return out;
-}
 
 // ESL SC::ESL_Adder(ESL a, ESL b){
 //     ESL out;
@@ -521,3 +359,69 @@ ESL SC::ToESL(bool* a){
 //     out.l = out_l;
 //     return out;
 // }
+
+bool* SC::MUX_general(vector<bool*> &bit_streams){
+    bool* output = new bool[bit_len];
+    float r;
+    for(int i = 0; i < bit_len; ++i){
+        r = int((float)rand() / (RAND_MAX) * (float)bit_streams.size()) % bit_streams.size();
+        output[i] = bit_streams[r][i];
+    }
+    return output;
+}
+
+//added by YEN-JU, construct conv2d for bipolar SC
+bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short img_size, short in_channels, short out_channels, short kernel_size, short stride, short padding){
+    vec.clear();
+    //declare a 3D array(out_channel * img_size * img_size) for the output tensor
+    bool**** output = new bool***[out_channels];
+    for(unsigned i = 0; i < out_channels; i++){ 
+        output[i] = new bool**[img_size + 2 * padding];
+        for( unsigned j = 0; j < img_size + 2; j++){ 
+            output[i][j] = new bool*[img_size + 2 * padding];
+            for(unsigned k = 0; k < img_size + 2; k++){
+                output[i][j][k] = new bool[bit_len];
+                output[i][j][k] = bit_gen(0);
+            }
+        }
+    }
+
+    //compute output channels
+    for(unsigned i = 0; i < out_channels; i++){
+        for(unsigned j = 0; j < img_size; j++){
+            for(unsigned k = 0; k < img_size; k++){
+                vec.clear();
+                for(unsigned m = 0; m < kernel_size; m++){
+                    for(unsigned n = 0; n < kernel_size; n++){
+                        for(unsigned t = 0; t < in_channels; t++){
+                            // cout<<i<<" "<<j<<" "<<k<<" "<<m<<" "<<n<<" "<<t<<endl;
+                            vec.push_back(XNOR(input[t][j + m][k + n],bit_gen(filter[t][i][m][n])));
+                            // cout<<i<<" "<<j<<" "<<k<<" "<<m<<" "<<n<<" "<<t<<endl;
+                        }
+                    }
+                }
+                // cout<<i<<j<<k<<endl;
+                output[i][j + padding][k + padding] = MUX_general(vec);
+                // cout<<i<<j<<k<<endl;
+            }
+        }
+    }
+    return output;
+}
+
+
+bool** SC::linear(bool** input, bool** weight, vector<bool*> & vec, bool* bias, short in, short out){
+    //new the output
+    bool** output = new bool*[out];
+    for(unsigned i = 0; i < out; i++){
+        output[i] = new bool[bit_len];
+    }
+    //compute the output of each neuron
+    for(unsigned i = 0; i < out; i++){ //for each output neuron
+        vec.clear();
+        for(unsigned j = 0; j < in; j++){
+            vec.push_back(XNOR(input[j], bit_gen(weight[j][i])));
+        }
+        output[i] = MUX_general(vec);
+    }
+}
