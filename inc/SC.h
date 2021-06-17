@@ -56,6 +56,8 @@ public:
     bool* MUX_general(vector<bool*> &);
     bool**** conv2d(bool****, bool****, vector<bool*> &, short, short, short, short, short, short); //added by YEN-JU, to conduct conv2d on a bipolar sc
     bool** linear(bool**, bool**, vector<bool*> &, bool*, short, short);
+    bool** view(bool****, short, short);
+    bool**** maxpool2d(bool****,short,short,short,short);
 };
 
 
