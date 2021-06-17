@@ -409,7 +409,7 @@ bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short im
     return output;
 }
 
-
+//added by yen_ju for fully connected layers
 bool** SC::linear(bool** input, bool** weight, vector<bool*> & vec, bool* bias, short in, short out){
     //new the output
     bool** output = new bool*[out];
@@ -424,4 +424,72 @@ bool** SC::linear(bool** input, bool** weight, vector<bool*> & vec, bool* bias, 
         }
         output[i] = MUX_general(vec);
     }
+    return output;
+}
+
+//added by yen_ju for conv to linear transfermation
+bool** SC::view(bool**** input, short channel, short kernal){
+    bool** output = new bool*[channel * kernal * kernal];
+    for(unsigned i = 0; i < channel * kernal * kernal; i++){
+        output[i] = new bool[bit_len];
+    }
+
+    for(unsigned i = 0; i < channel; i++){
+        for(unsigned j = 0; j < kernal; j++){
+            for(unsigned k = 0; k < kernal; k++){
+                output[i * kernal * kernal + j * kernal + k] = input[i][j][k];
+            }
+        }
+    }
+    return output;
+}
+
+//
+bool**** SC::maxpool2d(bool**** input, short in_size, short channel, short kernal, short stride){
+    //declare a 3D array(out_channel * img_size * img_size) for the output tensor
+    bool**** output = new bool***[channel];
+    for(unsigned i = 0; i < channel; i++){ 
+        output[i] = new bool**[in_size / 2 + 2];
+        for( unsigned j = 0; j < in_size / 2 + 2; j++){ 
+            output[i][j] = new bool*[in_size / 2 + 2];
+            for(unsigned k = 0; k < in_size / 2 + 2; k++){
+                output[i][j][k] = new bool[bit_len];
+                output[i][j][k] = bit_gen(0);
+            }
+        }
+    }
+    //find the max element of each kernal
+    int max = 0, x = 0, y = 0, matrix[kernal][kernal];
+    for( unsigned i = 0; i < in_size / 2; i++){ 
+        for(unsigned j = 0; j < in_size / 2; j++){
+            for(unsigned k = 0; k < kernal; k++){
+                for(unsigned l = 0; l < 2; l++){
+                    matrix[k][l] = 0;
+                }
+            }
+            for(unsigned k = 0; k < kernal; k++){
+                for(unsigned l = 0; l < kernal; l++){
+                    for(unsigned m = 0; m < channel; m++){
+                        matrix[k][l] += print(input[m][2 * i + k + 1][2 * j + l + 1]);
+                    }
+                }
+            }
+            max = 0;
+            x = 0;
+            y = 0;
+            for(unsigned k = 0; k < kernal; k++){
+                for(unsigned l = 0; l < 2; l++){
+                    if(matrix[k][l] > max){
+                        max = matrix[k][l];
+                        x = k;
+                        y = l;
+                    }
+                }
+            }
+            for(unsigned k = 0; k < channel; k++){
+                output[k][i + 1][j + 1] = input[k][2 * i + x + 1][2 * j + y +1];
+            }
+        }
+    }
+    return output;
 }
