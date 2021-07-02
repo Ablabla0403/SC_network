@@ -375,25 +375,26 @@ bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short im
     vec.clear();
     //declare a 3D array(out_channel * img_size * img_size) for the output tensor
     bool**** output = new bool***[out_channels];
-    for(unsigned i = 0; i < out_channels; i++){ 
+    for(unsigned i = 0; i < out_channels; ++i){ 
         output[i] = new bool**[img_size + 2 * padding];
-        for( unsigned j = 0; j < img_size + 2; j++){ 
+        for( unsigned j = 0; j < img_size + 2; ++j){ 
             output[i][j] = new bool*[img_size + 2 * padding];
-            for(unsigned k = 0; k < img_size + 2; k++){
+            for(unsigned k = 0; k < img_size + 2; ++k){
                 output[i][j][k] = new bool[bit_len];
                 output[i][j][k] = bit_gen(0);
             }
         }
     }
-
+    
     //compute output channels
-    for(unsigned i = 0; i < out_channels; i++){
-        for(unsigned j = 0; j < img_size; j++){
-            for(unsigned k = 0; k < img_size; k++){
+    for(unsigned i = 0; i < out_channels; ++i){
+        cout << i <<endl;
+        for(unsigned j = 0; j < img_size; ++j){
+            for(unsigned k = 0; k < img_size; ++k){
                 vec.clear();
-                for(unsigned m = 0; m < kernel_size; m++){
-                    for(unsigned n = 0; n < kernel_size; n++){
-                        for(unsigned t = 0; t < in_channels; t++){
+                for(unsigned m = 0; m < kernel_size; ++m){
+                    for(unsigned n = 0; n < kernel_size; ++n){
+                        for(unsigned t = 0; t < in_channels; ++t){
                             // cout<<i<<" "<<j<<" "<<k<<" "<<m<<" "<<n<<" "<<t<<endl;
                             vec.push_back(XNOR(input[t][j + m][k + n],bit_gen(filter[t][i][m][n])));
                             // cout<<i<<" "<<j<<" "<<k<<" "<<m<<" "<<n<<" "<<t<<endl;
