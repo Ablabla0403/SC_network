@@ -286,7 +286,8 @@ int main(int argc,char** argv){
     cout<<"4.1"<<endl;
     conv_neurons[2] = sc.maxpool2d(conv_neurons[1], 32, 128, 2, 2);
     cout<<"5"<<endl;
-    conv_neurons[2] = sc.conv2d(conv_neurons[2], chart[2], sum, 18, 128,128,3,1,1);
+    conv_neurons[2] = sc.conv2d(conv_neurons[2], chart[2], sum, 16, 128,128,3,1,1);
+    conv_neurons[2] = sc.conv2d(conv_neurons[2], chart[3], sum, 16, 128,128,3,1,1);
     
     for(unsigned i = 4; i < 6; ++i){
         conv_neurons[i] = new bool***[128];
@@ -303,7 +304,10 @@ int main(int argc,char** argv){
             }
         }
     }
-
+    conv_neurons[4] = sc.maxpool2d(conv_neurons[2], 16, 128, 2, 2);
+    conv_neurons[4] = sc.conv2d(conv_neurons[4], chart[4], sum, 8, 128,128,3,1,1);
+    conv_neurons[4] = sc.conv2d(conv_neurons[4], chart[5], sum, 8, 128,128,3,1,1);
+    for(unsigned i = 6; i < 8; ++i){
     for(unsigned i = 6; i < 8; ++i){
         conv_neurons[i] = new bool***[128];
         for(unsigned j = 0; j < 128; ++j){
@@ -320,7 +324,9 @@ int main(int argc,char** argv){
         }
     }
     cout<<6<<endl;
-    conv_neurons[8] = new bool***[128];
+    conv_neurons[6] = sc.maxpool2d(conv_neurons[4], 8, 128, 2, 2);
+    conv_neurons[6] = sc.conv2d(conv_neurons[6], chart[6], sum, 4, 128,128,3,1,1);
+    conv_neurons[6] = sc.conv2d(conv_neurons[6], chart[7], sum, 4, 128,128,3,1,1);
     for(unsigned j = 0; j < 128; ++j){
         conv_neurons[8][j] = new bool**[4];
         for(unsigned k = 0; k < 4; ++k){
@@ -334,6 +340,10 @@ int main(int argc,char** argv){
         }
     }
     cout<<7<<endl;
+    conv_neurons[8] = sc.maxpool2d(conv_neurons[6], 4, 128, 2, 2);
+    conv_neurons[8] = sc.conv2d(conv_neurons[8], chart[8], sum, 2, 128,128,3,1,1);
+    conv_neurons[8] = sc.conv2d(conv_neurons[8], chart[9], sum, 2, 128,128,3,1,1);
+
     conv_neurons[9] = new bool***[128];
     for(unsigned j = 0; j < 128; ++j){
         conv_neurons[9][j] = new bool**[2];
