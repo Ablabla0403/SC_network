@@ -47,7 +47,6 @@ bool* SC::bit_gen(double number){
     for(int i = 0; i< bit_len;i++){
         
         double r = (double)rand() / (RAND_MAX );
-        // cout<<r<<endl;
         if(r<prob){
             bit_stream[i] = true;
         }
@@ -65,12 +64,10 @@ ESL SC::number_gen(double number){ //分母先都初始化為一
     output.l = new bool[bit_len];
     double r = 1.0;
     if(number<=1 && number>=-1){
-        // cout<<"generating"<<endl;
         output.h = bit_gen(number*r);
         output.l = bit_gen(r);
     }
     else{
-        // cout<<"generating"<<endl;
         output.l = bit_gen(1.0/number * r);
         output.h = bit_gen(r);
     }
@@ -388,22 +385,17 @@ bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short im
     
     //compute output channels
     for(unsigned i = 0; i < out_channels; ++i){
-        cout << i <<endl;
         for(unsigned j = 0; j < img_size; ++j){
             for(unsigned k = 0; k < img_size; ++k){
                 vec.clear();
                 for(unsigned m = 0; m < kernel_size; ++m){
                     for(unsigned n = 0; n < kernel_size; ++n){
                         for(unsigned t = 0; t < in_channels; ++t){
-                            // cout<<i<<" "<<j<<" "<<k<<" "<<m<<" "<<n<<" "<<t<<endl;
                             vec.push_back(XNOR(input[t][j + m][k + n],bit_gen(filter[t][i][m][n])));
-                            // cout<<i<<" "<<j<<" "<<k<<" "<<m<<" "<<n<<" "<<t<<endl;
                         }
                     }
                 }
-                // cout<<i<<j<<k<<endl;
                 output[i][j + padding][k + padding] = MUX_general(vec);
-                // cout<<i<<j<<k<<endl;
             }
         }
     }
@@ -411,16 +403,16 @@ bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short im
 }
 
 //added by yen_ju for fully connected layers
-bool** SC::linear(bool** input, bool** weight, vector<bool*> & vec, bool* bias, short in, short out){
+bool** SC::linear(bool** input, bool** weight, vector<bool*> & vec, short in, short out){
     //new the output
     bool** output = new bool*[out];
     for(unsigned i = 0; i < out; i++){
         output[i] = new bool[bit_len];
     }
     //compute the output of each neuron
-    for(unsigned i = 0; i < out; i++){ //for each output neuron
+    for(unsigned i = 0; i < out; ++i){ //for each output neuron
         vec.clear();
-        for(unsigned j = 0; j < in; j++){
+        for(unsigned j = 0; j < in; ++j){
             vec.push_back(XNOR(input[j], bit_gen(weight[j][i])));
         }
         output[i] = MUX_general(vec);
@@ -429,16 +421,16 @@ bool** SC::linear(bool** input, bool** weight, vector<bool*> & vec, bool* bias, 
 }
 
 //added by yen_ju for conv to linear transfermation
-bool** SC::view(bool**** input, short channel, short kernal){
-    bool** output = new bool*[channel * kernal * kernal];
-    for(unsigned i = 0; i < channel * kernal * kernal; i++){
+bool** SC::view(bool**** input, short channel, short input_size){
+    bool** output = new bool*[channel * input_size * input_size];
+    for(unsigned i = 0; i < channel * input_size * input_size; i++){
         output[i] = new bool[bit_len];
     }
 
     for(unsigned i = 0; i < channel; i++){
-        for(unsigned j = 0; j < kernal; j++){
-            for(unsigned k = 0; k < kernal; k++){
-                output[i * kernal * kernal + j * kernal + k] = input[i][j][k];
+        for(unsigned j = 0; j < input_size; j++){
+            for(unsigned k = 0; k < input_size; k++){
+                output[i * input_size * input_size + j * input_size + k] = input[i][j + 1][k + 1];
             }
         }
     }
