@@ -242,20 +242,71 @@ int main(int argc,char** argv){
             fc_neurons[2][i][j] = 0;
         }
     }
-    //for convolution layers
-    conv_neurons[0] = sc.conv2d(conv_neurons[0], conv_weight[0], sum, 28, 1,128,3,1,1);
-    conv_neurons[0] = sc.conv2d(conv_neurons[0], conv_weight[1], sum, 28, 1,128,3,1,1);
-    conv_neurons[1] = sc.maxpool2d(conv_neurons[0], 28, 128, 2, 2);
-    conv_neurons[1] = sc.conv2d(conv_neurons[1], conv_weight[2], sum, 14, 1,128,3,1,1);
-    conv_neurons[1] = sc.conv2d(conv_neurons[1], conv_weight[3], sum, 14, 1,128,3,1,1);
-    conv_neurons[2] = sc.maxpool2d(conv_neurons[1], 14, 128, 2, 2);
-    conv_neurons[2] = sc.conv2d(conv_neurons[2], conv_weight[4], sum, 7, 1,128,3,1,1);
+    
+    fstream input_txt("inupt.txt");
+    fstream labels_txt("labels.txt");
+    int label = 0, max_cand = 0, correct_count = 0;
+    float max = 0;
+    for(size_t i = 0; i < 1000; ++i)
+    {
+        for(size_t j = 1; j < 29; ++j)
+        {
+            for(size_t k = 1; k < 29; ++k)
+            {
+                input_txt >> buffer;
+                conv_neurons[0][0][j][k] = sc.bit_gen(buffer / 255.0);
+            }
+        }
 
-    //flatten the neurons
-    fc_neurons[0] = sc.view(conv_neurons[2], 128, 7);
-    fc_neurons[1] = sc.linear(fc_neurons[0], fc_weight[0], sum, 128 * 7 * 7, 512);
-    fc_neurons[2] = sc.linear(fc_neurons[1], fc_weight[1], sum, 512, 10);
+        labels_txt >> label;
 
+        //for convolution layers
+        conv_neurons[0] = sc.conv2d(conv_neurons[0], conv_weight[0], sum, 28, 1,128,3,1,1);
+        cout<<"conv1"<<endl;
+        conv_neurons[0] = sc.conv2d(conv_neurons[0], conv_weight[1], sum, 28, 1,128,3,1,1);
+        cout<<"conv2"<<endl;
+        conv_neurons[1] = sc.maxpool2d(conv_neurons[0], 28, 128, 2, 2);
+        conv_neurons[1] = sc.conv2d(conv_neurons[1], conv_weight[2], sum, 14, 1,128,3,1,1);
+        cout<<"conv3"<<endl;
+        conv_neurons[1] = sc.conv2d(conv_neurons[1], conv_weight[3], sum, 14, 1,128,3,1,1);
+        cout<<"conv4"<<endl;
+        conv_neurons[2] = sc.maxpool2d(conv_neurons[1], 14, 128, 2, 2);
+        conv_neurons[2] = sc.conv2d(conv_neurons[2], conv_weight[4], sum, 7, 1,128,3,1,1);
+        cout<<"conv5"<<endl;
+
+        //flatten the neurons
+        fc_neurons[0] = sc.view(conv_neurons[2], 128, 7);
+        fc_neurons[1] = sc.linear(fc_neurons[0], fc_weight[0], sum, 128 * 7 * 7, 512);
+        cout<<"fc1"<<endl;
+        fc_neurons[2] = sc.linear(fc_neurons[1], fc_weight[1], sum, 512, 10);
+        cout<<"fc2"<<endl;
+
+
+        max = -10000;
+        max_cand = 0;
+        for(size_t j = 0; j < 10; ++j)
+        {
+            cout << j + 1 << " : " << sc.print(fc_neurons[2][j]) << endl;
+            if(sc.print(fc_neurons[2][j]) > max)
+            {
+                max = sc.print(fc_neurons[2][j]);
+                max_cand = j;
+            }
+        }
+
+        cout << "label is : " << label << " ;predict is : " << max_cand << endl;
+        if(max_cand == label)
+        {
+            ++correct_count;
+            cout << "correct!!!" << endl;
+        }
+        else cout << "wrong!!!" << endl;
+        cout << "accuracy = " << (float)correct_count / (i + 1) << endl;
+    }
+
+
+    input_txt.close();
+    labels_txt.close();
     // cout<<"5"<<endl;
     // conv_neurons[2] = sc.conv2d(conv_neurons[2], conv_weight[2], sum, 16, 128,128,3,1,1);
     // conv_neurons[2] = sc.conv2d(conv_neurons[2], conv_weight[3], sum, 16, 128,128,3,1,1);
