@@ -14,298 +14,219 @@ int main(int argc,char** argv){
     srand(time(NULL));
     cout<<"program in"<<endl;
     vector<bool*> sum;
-  
-    bool***** conv_weight;
-    conv_weight = new bool****[5];
-    conv_weight[0] = new bool***[1];
-    for(unsigned i = 0; i < 1; i++){
-        conv_weight[0][i] = new bool**[128];
-        for(unsigned j = 0; j < 128; j++){
-            conv_weight[0][i][j] = new bool*[3];
-            for(unsigned k = 0; k < 3; k++){
-                conv_weight[0][i][j][k] = new bool[3];
-                for(unsigned l = 0; l < 3; l++){
-                    conv_weight[0][i][j][k][l] = 0;
-                }
-            }
-        }
-    }
-
-    for(unsigned m = 1; m < 5; m++){
-        conv_weight[m] = new bool***[128];
-        for(unsigned i = 0; i < 128; i++){
-            conv_weight[m][i] = new bool**[128];
-            for(unsigned j = 0; j < 128; j++){
-                conv_weight[m][i][j] = new bool*[3];
-                for(unsigned k = 0; k < 3; k++){
-                    conv_weight[m][i][j][k] = new bool[3];
-                    for(unsigned l = 0; l < 3; l++){
-                        conv_weight[m][i][j][k][l] = 0;
-                    }
-                }
-            }
-        }
-    }
-    cout<<2<<endl;
-    fstream conv1_w_1("conv1_w-1.txt");
-    if (!conv1_w_1){
-        cout<<"error"<<endl;
-    }
+    int bb;
     char buf;
     // vector<int> C;
     // C.reserve(size);
     float buffer;
-    for(size_t i = 0; i < 1; ++i){
-        for(size_t j = 0; j < 128; ++j){
-            for(size_t k = 0; k < 3; ++k){
-                for(size_t l = 0; l < 3; ++l){
-                    conv1_w_1 >> buffer;
-                    if(buffer == -1) conv_weight[0][i][j][k][l] = false;
-                    if(buffer == 1) conv_weight[0][i][j][k][l] = true;
-                }
-            }
-        }
-    }
-    conv1_w_1.close();
     
-    fstream conv_w_2("conv1_w-2.txt");
-    for(size_t i = 0; i < 128; ++i){
-        for(size_t j = 0; j < 128; ++j){
-            for(size_t k = 0; k < 3; ++k){
-                for(size_t l = 0; l < 3; ++l){
-                    conv_w_2 >> buffer;
-                    if(buffer == -1) conv_weight[1][i][j][k][l] = false;
-                    if(buffer == 1) conv_weight[1][i][j][k][l] = true;
-                }
-            }
-        }
-    }
-    conv_w_2.close();
 
-    fstream conv_w_3("conv1_w-3.txt");
-    for(size_t i = 0; i < 128; ++i){
-        for(size_t j = 0; j < 128; ++j){
-            for(size_t k = 0; k < 3; ++k){
-                for(size_t l = 0; l < 3; ++l){
-                    conv_w_2 >> buffer;
-                    if(buffer == -1) conv_weight[2][i][j][k][l] = false;
-                    if(buffer == 1) conv_weight[2][i][j][k][l] = true;
-                }
-            }
-        }
-    }
-    conv_w_3.close();
+    float threshold_1[128] = { 31.2520, 31.7295, 31.9860, 32.1967, 32.0069, 32.0034, 32.3052, 31.9504, 32.4089, 32.4746, 31.4086, 31.3334, 31.4526, 31.9276, 32.0633, 31.9319, 31.5040, 32.0485, 32.0162, 31.9209, 31.7469, 32.4703, 31.5708, 31.9206, 32.1030, 31.3721, 32.2054, 31.6669, 31.9272, 32.0241, 31.9745, 32.6506, 31.9937, 32.3388, 32.6166, 32.0039, 31.4741, 32.0569, 31.8851, 32.6083, 31.9731, 31.9418, 31.8967, 31.5112, 32.1618, 32.5812, 31.3821, 32.1179, 31.5979, 32.4539, 32.4840, 32.2521, 32.4708, 31.8354, 32.0963, 32.0062, 31.8156, 31.7275, 32.4793, 32.0065, 31.9370, 32.0240, 31.8934, 31.5410, 32.0278, 32.0413, 31.9087, 32.4337, 31.9831, 32.5080, 32.2738, 31.9739, 31.6519, 31.9105, 32.0018, 32.0519, 32.0336, 31.9877, 32.0234, 32.1694, 32.4154, 31.9914, 32.0289, 31.9392, 32.2670, 31.9570, 32.5110, 32.0338, 31.4954, 31.5612, 32.0339, 32.0321, 31.9244, 32.2526, 31.4804, 31.9997, 31.8574, 32.5920, 31.9483, 31.4156, 31.8468, 32.0847, 32.0728, 31.6358, 31.5948, 32.1716, 32.0847, 32.4497, 32.7448, 31.5364, 31.9967, 31.8685, 32.0237, 32.7138, 32.4012, 31.8359, 31.7007, 32.9600, 32.0915, 32.0115, 32.5817, 31.5854, 32.0745, 31.9814, 32.0036, 32.4555, 32.0280, 31.5026} ;
+    float threshold_2[64] = { 80.5260, 78.8360, 70.4906, 53.8416, 57.2258, 49.5227, 80.4251, 40.4497, 62.8976, 61.5424, 89.6907, 71.7569, 41.4356, 70.6796, 57.0597, 74.4207, 57.7348, 86.1379, 43.4228, 59.1331, 74.3588, 85.4249, 39.8367, 77.6866, 54.3752, 36.5591, 55.3117, 55.1413, 74.1729, 56.2914, 86.8700, 70.6369} ;
+    float threshold_3[4] = { 20.3713, 21.2846, 22.3680, 12.4577} ;
 
-    fstream conv_w_4("conv1_w-4.txt");
-    for(size_t i = 0; i < 128; ++i){
-        for(size_t j = 0; j < 128; ++j){
-            for(size_t k = 0; k < 3; ++k){
-                for(size_t l = 0; l < 3; ++l){
-                    conv_w_2 >> buffer;
-                    if(buffer == -1) conv_weight[3][i][j][k][l] = false;
-                    if(buffer == 1) conv_weight[3][i][j][k][l] = true;
-                }
-            }
-        }
-    }
-    conv_w_4.close();
-
-    fstream conv_w_5("conv1_w-5.txt");
-    for(size_t i = 0; i < 128; ++i){
-        for(size_t j = 0; j < 128; ++j){
-            for(size_t k = 0; k < 3; ++k){
-                for(size_t l = 0; l < 3; ++l){
-                    conv_w_2 >> buffer;
-                    if(buffer == -1) conv_weight[4][i][j][k][l] = false;
-                    if(buffer == 1) conv_weight[4][i][j][k][l] = true;
-                }
-            }
-        }
-    }
-    conv_w_5.close();
-
-    cout<<"completed!!!"<<endl;
-    
-    bool***** conv_neurons;
-
-    conv_neurons = new bool****[3];
-    conv_neurons[0] = new bool***[1];
-    for(unsigned j = 0; j < 1; ++j){
-        conv_neurons[0][j] = new bool**[30];
-        for(unsigned k = 0; k < 30; ++k){
-            conv_neurons[0][j][k] = new bool*[30];
-            for(unsigned l = 0; l < 30; ++l){
-                // cout<<l<<endl;
-                conv_neurons[0][j][k][l] = new bool[bit_len];
-                // cout<<l<<endl;
-                for(unsigned m = 0; m < bit_len; ++m){
-                    // cout<<l<<" "<<m<<endl;
-                    conv_neurons[0][j][k][l][m] = 0;
-                    // cout<<l<<" "<<m<<endl;
-                }
-            }
-        }
-    }
-
-    conv_neurons[1] = new bool***[128];
-    for(unsigned j = 0; j < 128; ++j){
-        conv_neurons[1][j] = new bool**[15];
-        for(unsigned k = 0; k < 15; ++k){
-            conv_neurons[1][j][k] = new bool*[15];
-            for(unsigned l = 0; l < 15; ++l){
-                conv_neurons[1][j][k][l] = new bool[bit_len];
-                for(unsigned m = 0; m < bit_len; ++m){
-                    conv_neurons[1][j][k][l][m] = 0;
-                }
-            }
-        }
-    }
-    // conv_neurons[1] = sc.conv2d(conv_neurons[0], conv_weight[0], sum, 32, 3,128,3,1,1);
-    
-    conv_neurons[2] = new bool***[128];
-    for(unsigned j = 0; j < 128; ++j){
-        conv_neurons[2][j] = new bool**[8];
-        for(unsigned k = 0; k < 8; ++k){
-            conv_neurons[2][j][k] = new bool*[8];
-            for(unsigned l = 0; l < 8; ++l){
-                conv_neurons[2][j][k][l] = new bool[bit_len];
-                for(unsigned m = 0; m < bit_len; ++m){
-                    conv_neurons[2][j][k][l][m] = 0;
-                }
-            }
-        }
-    }
     
     bool*** fc_weight;
-    fc_weight = new bool**[2];
+    fc_weight = new bool**[4];
 
-    fc_weight[0] = new bool*[128 * 7 * 7];
-    for(size_t i = 0; i < 128 * 7 * 7; ++i){
-        fc_weight[0][i] = new bool[512];
-        for(size_t j = 0; j < 512; ++j){
+    fc_weight[0] = new bool*[64];
+    for(size_t i = 0; i < 64; ++i){
+        fc_weight[0][i] = new bool[128];
+        for(size_t j = 0; j < 128; ++j){
             fc_weight[0][i][j] = 0;
         }
     }
-
-    fc_weight[1] = new bool*[512];
+    cout<<"a"<<endl;
+    fc_weight[1] = new bool*[128];
     
-    for(size_t i = 0; i < 512; ++i){
-        fc_weight[1][i] = new bool[10];
-        for(size_t j = 0; j < 10; ++j){
+    for(size_t i = 0; i < 128; ++i){
+        fc_weight[1][i] = new bool[128];
+        for(size_t j = 0; j < 128; ++j){
             fc_weight[1][i][j] = 0;
         }
     }
+    cout<<"b"<<endl;
+    fc_weight[2] = new bool*[128];
+    
+    for(size_t i = 0; i < 128; ++i){
+        fc_weight[2][i] = new bool[32];
+        for(size_t j = 0; j < 32; ++j){
+            fc_weight[2][i][j] = 0;
+        }
+    }
+    cout<<"c"<<endl;
+    fc_weight[3] = new bool*[32];
+    
+    for(size_t i = 0; i < 32; ++i){
+        fc_weight[3][i] = new bool[4];
+        for(size_t j = 0; j < 4; ++j){
+            fc_weight[3][i][j] = 0;
+        }
+    }
 
-    fstream fc_w_1("con_w-1.txt");
-    for(size_t i = 0; i < 128 * 7 * 7; ++i){
-        for(size_t j = 0; j < 512; ++j){
-            fc_w_1 >> buffer;
+    fstream fc("fc.txt");
+    if (!fc){
+        cerr<<"error _fc_"<<endl;
+    }
+    for(size_t i = 0; i < 64; ++i){
+        for(size_t j = 0; j < 128; ++j){
+            fc >> buffer;
+            // cout << buffer <<endl;
             if(buffer == -1) fc_weight[0][i][j] = false;
             if(buffer == 1) fc_weight[0][i][j] = true;
         }
     }
-    fc_w_1.close();
+    
+    // for(size_t i = 0; i < 128; ++i){
+    //     for(size_t j = 0; j < 128; ++j){
+    //         fc >> buffer;
+    //         // cout << buffer << endl;
+    //         if(buffer == -1) fc_weight[1][i][j] = false;
+    //         if(buffer == 1) fc_weight[1][i][j] = true;
+    //     }
+    // }
+    cout<<"1"<<endl;
 
-    fstream fc_w_2("con_w-2.txt");
-    for(size_t i = 0; i < 512; ++i){
-        for(size_t j = 0; j < 10; ++j){
-            fc_w_1 >> buffer;
-            if(buffer == -1) fc_weight[1][i][j] = false;
-            if(buffer == 1) fc_weight[1][i][j] = true;
+    for(size_t i = 0; i < 128; ++i){
+        for(size_t j = 0; j < 32; ++j){
+            fc >> buffer;
+            // cout << buffer << endl;
+            if(buffer == -1) fc_weight[2][i][j] = false;
+            if(buffer == 1) fc_weight[2][i][j] = true;
         }
     }
-    fc_w_2.close();
+    cout<<"2"<<endl;
+    for(size_t i = 0; i < 32; ++i){
+        for(size_t j = 0; j < 10; ++j){
+            fc >> buffer;
+            // cout << buffer << endl;
+            if(buffer == -1) fc_weight[3][i][j] = false;
+            if(buffer == 1) fc_weight[3][i][j] = true;
+        }
+    }
 
+    fc.close();
+    cout<<"3"<<endl;
     bool*** fc_neurons;
-    fc_neurons = new bool**[3];
+    fc_neurons = new bool**[5];
     
-    fc_neurons[0] = new bool*[128 * 7 * 7];
-    for(size_t i = 0; i < 128 * 7 * 7; ++i){
+    fc_neurons[0] = new bool*[64];
+    for(size_t i = 0; i < 64; ++i){
         fc_neurons[0][i] = new bool[bit_len];
         for(size_t j = 0; j < bit_len; ++j){
             fc_neurons[0][i][j] = 0;
         }
     }
 
-    fc_neurons[1] = new bool*[512];
-    for(size_t i = 0; i < 512; ++i){
+    fc_neurons[1] = new bool*[128];
+    for(size_t i = 0; i < 128; ++i){
         fc_neurons[1][i] = new bool[bit_len];
         for(size_t j = 0; j < bit_len; ++j){
             fc_neurons[1][i][j] = 0;
         }
     }
 
-    fc_neurons[2] = new bool*[10];
-    for(size_t i = 0; i < 10; ++i){
+    fc_neurons[2] = new bool*[128];
+    for(size_t i = 0; i < 128; ++i){
         fc_neurons[2][i] = new bool[bit_len];
         for(size_t j = 0; j < bit_len; ++j){
             fc_neurons[2][i][j] = 0;
         }
     }
+
+    fc_neurons[3] = new bool*[32];
+    for(size_t i = 0; i < 32; ++i){
+        fc_neurons[3][i] = new bool[bit_len];
+        for(size_t j = 0; j < bit_len; ++j){
+            fc_neurons[3][i][j] = 0;
+        }
+    }
+
+    fc_neurons[4] = new bool*[4];
+    for(size_t i = 0; i < 4; ++i){
+        fc_neurons[4][i] = new bool[bit_len];
+        for(size_t j = 0; j < bit_len; ++j){
+            fc_neurons[4][i][j] = 0;
+        }
+    }
     
-    fstream input_txt("inupt.txt");
-    fstream labels_txt("labels.txt");
+    
+
+    fstream labels_txt("labels-2.txt");
+    if (!labels_txt){
+        cerr<<"error"<<endl;
+    }
+
+    fstream inputs_txt("inputs.txt");
+    if (!inputs_txt){
+        cerr<<"error"<<endl;
+    }
+    
     int label = 0, max_cand = 0, correct_count = 0;
     float max = 0;
-    for(size_t i = 0; i < 1000; ++i)
+    // char b;
+    for(size_t i = 0; i < 1168; ++i)
     {
-        for(size_t j = 1; j < 29; ++j)
+        for(size_t j = 0; j < 64; ++j)
         {
-            for(size_t k = 1; k < 29; ++k)
-            {
-                input_txt >> buffer;
-                conv_neurons[0][0][j][k] = sc.bit_gen(buffer / 255.0);
-            }
+            inputs_txt >> bb;
+            // cout << "buffer = " << bb << endl;
+            fc_neurons[0][j] = sc.bit_gen(bb / 128.0);
         }
+        // cout<<"\n";
 
         labels_txt >> label;
+        
 
         //for convolution layers
-        conv_neurons[0] = sc.conv2d(conv_neurons[0], conv_weight[0], sum, 28, 1,128,3,1,1);
-        cout<<"conv1"<<endl;
-        conv_neurons[0] = sc.conv2d(conv_neurons[0], conv_weight[1], sum, 28, 1,128,3,1,1);
-        cout<<"conv2"<<endl;
-        conv_neurons[1] = sc.maxpool2d(conv_neurons[0], 28, 128, 2, 2);
-        conv_neurons[1] = sc.conv2d(conv_neurons[1], conv_weight[2], sum, 14, 1,128,3,1,1);
-        cout<<"conv3"<<endl;
-        conv_neurons[1] = sc.conv2d(conv_neurons[1], conv_weight[3], sum, 14, 1,128,3,1,1);
-        cout<<"conv4"<<endl;
-        conv_neurons[2] = sc.maxpool2d(conv_neurons[1], 14, 128, 2, 2);
-        conv_neurons[2] = sc.conv2d(conv_neurons[2], conv_weight[4], sum, 7, 1,128,3,1,1);
-        cout<<"conv5"<<endl;
-
-        //flatten the neurons
-        fc_neurons[0] = sc.view(conv_neurons[2], 128, 7);
-        fc_neurons[1] = sc.linear(fc_neurons[0], fc_weight[0], sum, 128 * 7 * 7, 512);
+        // cout << conv_neurons[0][0][0][0] << endl;
         cout<<"fc1"<<endl;
-        fc_neurons[2] = sc.linear(fc_neurons[1], fc_weight[1], sum, 512, 10);
+        fc_neurons[1] = sc.linear(fc_neurons[0], fc_weight[0], sum, 64, 128);
+        // for(size_t i = 0; i < 128; ++i){
+        //     if(sc.print(fc_neurons[1][i]) < threshold_1[i]) fc_neurons[1][i] = sc.bit_gen(-1);
+        //     else fc_neurons[1][i] = sc.bit_gen(1);
+        // }
         cout<<"fc2"<<endl;
+        // fc_neurons[2] = sc.linear(fc_neurons[1], fc_weight[1], sum, 128, 128);
+        fc_neurons[3] = sc.linear(fc_neurons[1], fc_weight[2], sum, 128, 32);
+        // for(size_t i = 0; i < 32; ++i){
+        //     if(sc.print(fc_neurons[3][i]) < threshold_2[i]) fc_neurons[3][i] = sc.bit_gen(-1);
+        //     else fc_neurons[3][i] = sc.bit_gen(1);
+        // }
+        fc_neurons[4] = sc.linear(fc_neurons[3], fc_weight[3], sum, 32, 4);
+        // for(size_t i = 0; i < 4; ++i){
+        //     if(sc.print(fc_neurons[4][i]) < threshold_3[i]) fc_neurons[4][i] = sc.bit_gen(-1);
+        //     else fc_neurons[4][i] = sc.bit_gen(1);
+        // }
+        // for(size_t j = 0; j < 64; ++j)
+        // {
+        //     cout << "neuron " << j << " : " << sc.print(fc_neurons[0][j]) << endl;
+        // }
 
-
-        max = -10000;
+        max = sc.print(fc_neurons[4][0]);
         max_cand = 0;
-        for(size_t j = 0; j < 10; ++j)
+        for(size_t j = 0; j < 4; ++j)
         {
-            cout << j + 1 << " : " << sc.print(fc_neurons[2][j]) << endl;
-            if(sc.print(fc_neurons[2][j]) > max)
+            cout << j + 1 << " : " << sc.print(fc_neurons[4][j]) << endl;
+            if(sc.print(fc_neurons[4][j]) > max)
             {
                 max = sc.print(fc_neurons[2][j]);
                 max_cand = j;
             }
         }
 
-        cout << "label is : " << label << " ;predict is : " << max_cand << endl;
+        // cout << "label is : " << label << " ;predict is : " << max_cand << endl;
         if(max_cand == label)
         {
             ++correct_count;
-            cout << "correct!!!" << endl;
+            // cout << "correct!!!" << endl;
         }
-        else cout << "wrong!!!" << endl;
+        // else cout << "wrong!!!" << endl;
         cout << "accuracy = " << (float)correct_count / (i + 1) << endl;
     }
 
 
-    input_txt.close();
+    inputs_txt.close();
     labels_txt.close();
     // cout<<"5"<<endl;
     // conv_neurons[2] = sc.conv2d(conv_neurons[2], conv_weight[2], sum, 16, 128,128,3,1,1);
