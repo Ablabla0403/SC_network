@@ -172,9 +172,10 @@ float threshold_3[4] = {-2.493149518966675, -7.356795787811279, -7.1151962280273
         fc_neurons[1] = sc.linear(fc_neurons[0], fc_weight[0], sum, 64, 32);
         cout << "\n";
         for(size_t k = 0; k < 32; ++k){
-            cout << fc_neurons[1][k] << " " << threshold_1[k] << endl;
+            
             if(fc_neurons[1][k] < threshold_1[k]) fc_neurons[1][k] = -1;
             else if(fc_neurons[1][k] > threshold_1[k])fc_neurons[1][k] = 1;
+            cout << fc_neurons[1][k] << " " << threshold_1[k] << endl;
         }
 
         fc_neurons[2] = sc.linear(fc_neurons[1], fc_weight[1], sum, 32, 32);
