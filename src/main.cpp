@@ -155,7 +155,7 @@ float threshold_3[4] = {-2.493149518966675, -7.356795787811279, -7.1151962280273
     int label = 0, max_cand = 0, correct_count = 0;
     float max = 0;
     // char b;
-    for(size_t i = 0; i < 1168; ++i)
+    for(size_t i = 0; i < 3; ++i)
     {
         for(size_t j = 0; j < 64; ++j)
         {
@@ -172,6 +172,7 @@ float threshold_3[4] = {-2.493149518966675, -7.356795787811279, -7.1151962280273
         fc_neurons[1] = sc.linear(fc_neurons[0], fc_weight[0], sum, 64, 32);
         cout << "\n";
         for(size_t k = 0; k < 32; ++k){
+            cout << fc_neurons[1][k] << " " << threshold_1[k] << endl;
             if(fc_neurons[1][k] < threshold_1[k]) fc_neurons[1][k] = -1;
             else if(fc_neurons[1][k] > threshold_1[k])fc_neurons[1][k] = 1;
         }
@@ -206,7 +207,7 @@ float threshold_3[4] = {-2.493149518966675, -7.356795787811279, -7.1151962280273
             }
         }
 
-        cout << "label is : " << label << " ;predict is : " << max_cand << endl;
+        // cout << "label is : " << label << " ;predict is : " << max_cand << endl;
         if(max_cand == label)
         {
             ++correct_count;
