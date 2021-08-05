@@ -402,7 +402,7 @@ bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short im
 }
 
 //added by yen_ju for fully connected layers
-bool** SC::linear(bool** input, bool** weight, vector<bool*> & vec, short in, short out){
+bool** SC::linear(bool** input, int** weight, vector<bool*> & vec, short in, short out){
     //new the output
     bool** output = new bool*[out];
     for(unsigned i = 0; i < out; i++){

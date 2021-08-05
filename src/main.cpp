@@ -26,39 +26,39 @@ int main(int argc,char** argv){
     float threshold_3[4] = { 20.3713, 21.2846, 22.3680, 12.4577} ;
 
     
-    bool*** fc_weight;
-    fc_weight = new bool**[4];
+    int*** fc_weight;
+    fc_weight = new int**[4];
 
-    fc_weight[0] = new bool*[64];
+    fc_weight[0] = new int*[64];
     for(size_t i = 0; i < 64; ++i){
-        fc_weight[0][i] = new bool[128];
-        for(size_t j = 0; j < 128; ++j){
+        fc_weight[0][i] = new int[32];
+        for(size_t j = 0; j < 32; ++j){
             fc_weight[0][i][j] = 0;
         }
     }
     cout<<"a"<<endl;
-    fc_weight[1] = new bool*[128];
+    fc_weight[1] = new int*[32];
     
-    for(size_t i = 0; i < 128; ++i){
-        fc_weight[1][i] = new bool[128];
-        for(size_t j = 0; j < 128; ++j){
+    for(size_t i = 0; i < 32; ++i){
+        fc_weight[1][i] = new int[32];
+        for(size_t j = 0; j < 32; ++j){
             fc_weight[1][i][j] = 0;
         }
     }
     cout<<"b"<<endl;
-    fc_weight[2] = new bool*[128];
+    fc_weight[2] = new int*[32];
     
-    for(size_t i = 0; i < 128; ++i){
-        fc_weight[2][i] = new bool[32];
-        for(size_t j = 0; j < 32; ++j){
+    for(size_t i = 0; i < 32; ++i){
+        fc_weight[2][i] = new int[4];
+        for(size_t j = 0; j < 4; ++j){
             fc_weight[2][i][j] = 0;
         }
     }
     cout<<"c"<<endl;
-    fc_weight[3] = new bool*[32];
+    fc_weight[3] = new int*[32];
     
     for(size_t i = 0; i < 32; ++i){
-        fc_weight[3][i] = new bool[4];
+        fc_weight[3][i] = new int[4];
         for(size_t j = 0; j < 4; ++j){
             fc_weight[3][i][j] = 0;
         }
@@ -69,39 +69,39 @@ int main(int argc,char** argv){
         cerr<<"error _fc_"<<endl;
     }
     for(size_t i = 0; i < 64; ++i){
-        for(size_t j = 0; j < 128; ++j){
+        for(size_t j = 0; j < 32; ++j){
             fc >> buffer;
             // cout << buffer <<endl;
-            if(buffer == -1) fc_weight[0][i][j] = false;
-            if(buffer == 1) fc_weight[0][i][j] = true;
+            if(buffer == -1) fc_weight[0][i][j] = -1;
+            if(buffer == 1) fc_weight[0][i][j] = 1;
         }
     }
     
-    // for(size_t i = 0; i < 128; ++i){
-    //     for(size_t j = 0; j < 128; ++j){
-    //         fc >> buffer;
-    //         // cout << buffer << endl;
-    //         if(buffer == -1) fc_weight[1][i][j] = false;
-    //         if(buffer == 1) fc_weight[1][i][j] = true;
-    //     }
-    // }
-    cout<<"1"<<endl;
-
-    for(size_t i = 0; i < 128; ++i){
+    for(size_t i = 0; i < 32; ++i){
         for(size_t j = 0; j < 32; ++j){
             fc >> buffer;
             // cout << buffer << endl;
-            if(buffer == -1) fc_weight[2][i][j] = false;
-            if(buffer == 1) fc_weight[2][i][j] = true;
+            if(buffer == -1) fc_weight[1][i][j] = -1;
+            if(buffer == 1) fc_weight[1][i][j] = 1;
+        }
+    }
+    cout<<"1"<<endl;
+
+    for(size_t i = 0; i < 32; ++i){
+        for(size_t j = 0; j < 4; ++j){
+            fc >> buffer;
+            // cout << buffer << endl;
+            if(buffer == -1) fc_weight[2][i][j] = -1;
+            if(buffer == 1) fc_weight[2][i][j] = 1;
         }
     }
     cout<<"2"<<endl;
     for(size_t i = 0; i < 32; ++i){
-        for(size_t j = 0; j < 10; ++j){
+        for(size_t j = 0; j < 4; ++j){
             fc >> buffer;
             // cout << buffer << endl;
-            if(buffer == -1) fc_weight[3][i][j] = false;
-            if(buffer == 1) fc_weight[3][i][j] = true;
+            if(buffer == -1) fc_weight[3][i][j] = -1;
+            if(buffer == 1) fc_weight[3][i][j] = 1;
         }
     }
 
@@ -181,36 +181,35 @@ int main(int argc,char** argv){
         //for convolution layers
         // cout << conv_neurons[0][0][0][0] << endl;
         cout<<"fc1"<<endl;
-        fc_neurons[1] = sc.linear(fc_neurons[0], fc_weight[0], sum, 64, 128);
-        // for(size_t i = 0; i < 128; ++i){
-        //     if(sc.print(fc_neurons[1][i]) < threshold_1[i]) fc_neurons[1][i] = sc.bit_gen(-1);
-        //     else fc_neurons[1][i] = sc.bit_gen(1);
-        // }
+        fc_neurons[1] = sc.linear(fc_neurons[0], fc_weight[0], sum, 64, 32);
+        for(size_t i = 0; i < 32; ++i){
+            if(sc.print(fc_neurons[1][i]) < threshold_1[i]) fc_neurons[1][i] = sc.bit_gen(-1);
+            else fc_neurons[1][i] = sc.bit_gen(1);
+        }
         cout<<"fc2"<<endl;
-        // fc_neurons[2] = sc.linear(fc_neurons[1], fc_weight[1], sum, 128, 128);
-        fc_neurons[3] = sc.linear(fc_neurons[1], fc_weight[2], sum, 128, 32);
-        // for(size_t i = 0; i < 32; ++i){
-        //     if(sc.print(fc_neurons[3][i]) < threshold_2[i]) fc_neurons[3][i] = sc.bit_gen(-1);
-        //     else fc_neurons[3][i] = sc.bit_gen(1);
-        // }
-        fc_neurons[4] = sc.linear(fc_neurons[3], fc_weight[3], sum, 32, 4);
-        // for(size_t i = 0; i < 4; ++i){
-        //     if(sc.print(fc_neurons[4][i]) < threshold_3[i]) fc_neurons[4][i] = sc.bit_gen(-1);
-        //     else fc_neurons[4][i] = sc.bit_gen(1);
-        // }
-        // for(size_t j = 0; j < 64; ++j)
-        // {
-        //     cout << "neuron " << j << " : " << sc.print(fc_neurons[0][j]) << endl;
-        // }
+        fc_neurons[2] = sc.linear(fc_neurons[1], fc_weight[1], sum, 32, 32);
+        for(size_t i = 0; i < 32; ++i){
+            if(sc.print(fc_neurons[2][i]) < threshold_2[i]) fc_neurons[2][i] = sc.bit_gen(-1);
+            else fc_neurons[2][i] = sc.bit_gen(1);
+        }
+        fc_neurons[3] = sc.linear(fc_neurons[2], fc_weight[2], sum, 32, 4);
+        for(size_t i = 0; i < 4; ++i){
+            fc_neurons[3][0] = sc.MUX(fc_neurons[3][0], sc.bit_gen(threshold_3[0]));
+            for(size_t j = 1; j < 4; ++j)
+            {
+                fc_neurons[3][j] = sc.MUX(fc_neurons[3][j], sc.bit_gen(threshold_3[j]));
+                fc_neurons[3][j] = sc.XNOR(fc_neurons[3][j], sc.bit_gen(-1));
+            }
+        }
 
-        max = sc.print(fc_neurons[4][0]);
+        max = sc.print(fc_neurons[3][0]);
         max_cand = 0;
         for(size_t j = 0; j < 4; ++j)
         {
-            cout << j + 1 << " : " << sc.print(fc_neurons[4][j]) << endl;
-            if(sc.print(fc_neurons[4][j]) > max)
+            cout << j + 1 << " : " << sc.print(fc_neurons[3][j]) << endl;
+            if(sc.print(fc_neurons[3][j]) > max)
             {
-                max = sc.print(fc_neurons[2][j]);
+                max = sc.print(fc_neurons[3][j]);
                 max_cand = j;
             }
         }
@@ -242,133 +241,3 @@ int main(int argc,char** argv){
 }
 
 
-
-// while (fin>>buffer){
-    //     cout<<1<<endl;
-    // }
-    // bool flag = 1;
-    // unsigned a = 0;
-    // short rank = 0, in_channel = -1,conv = -1, out_channel = -1, kernal_1 = -1, kernal_2 = -1;
-
-    // while(flag){
-    //     fin>>buf;
-    //     a++;
-    //     if(buf == 'c')
-    //         conv++;
-    //     if(buf == '['){
-    //         rank++;
-    //         if(rank == 2)
-    //             in_channel++;
-    //         if(rank == 3)
-    //             out_channel++;
-    //         if(rank == 4)
-    //             kernal_1++;
-    //     }
-    
-    //     if(buf == ']'){
-    //         rank--;
-    //         if(rank == 0)
-    //             in_channel = -1;
-    //         if(rank == 1)
-    //             out_channel = -1;
-    //         if(rank == 2)
-    //             kernal_1 = -1;
-    //         if(rank == 3)
-    //             kernal_2 = -1;
-    //     }
-    //     if(rank == 4){
-    //         if(buf == '0'){
-    //             kernal_2++;
-    //             // cout<<conv <<" "<<in_channel<<" "<<out_channel<<" "<<kernal_1<<" "<<kernal_2<<endl;
-    //             conv_weight[conv][in_channel][out_channel][kernal_1][kernal_2] = 0;
-    //         }
-    //         if(buf == '1'){
-    //             kernal_2++;
-    //             // cout<<conv<<" "<<in_channel<<" "<<out_channel<<" "<<kernal_1<<" "<<kernal_2<<endl;
-    //             conv_weight[conv][in_channel][out_channel][kernal_1][kernal_2] = 1;
-    //         }
-    //     }
-    //     if(buf == '?')
-    //         flag = 0;
-    // }
-    // cout<<"complete=========zz==z=================="<<endl;
-    // fin.close();
-    // fstream fin_1("fc-6.txt");
-    // if (!fin_1){
-    //     cout<<"error"<<endl;
-    // }
-    // flag = 1;
-    // short fc = -1, weight_1 = -1, weight_2 = -1;
-    // rank = 0;
-    // bool*** chart_1;
-    // chart_1 = new bool**[5];
-    // chart_1[0] = new bool*[512];
-    // chart_1[4] = new bool*[128];
-
-    // for(unsigned i = 0; i < 512; i++){
-    //     chart_1[0][i] = new bool[128];
-    //     for(unsigned j = 0; j < 128; j++){
-    //         chart_1[0][i][j] = 0;
-    //     }
-    // }
-
-    // for(unsigned i = 0; i < 128; i++){
-    //     chart_1[4][i] = new bool[10];
-    //     for(unsigned j = 0; j < 10; j++){
-    //         chart_1[4][i][j] = 0;
-    //     }
-    // }
-
-    // for(unsigned i = 1; i < 4; i++){
-    //     chart_1[i] = new bool*[128];
-    //     for(unsigned j = 0; j < 128; j++){
-    //         chart_1[i][j] = new bool[128];
-    //         for(unsigned k = 0; k < 128; k++){
-    //             chart_1[i][j][k] = 0;
-    //         }
-    //     }
-    // }
-
-    // while(flag){
-    //     fin_1>>buf;
-    //     if(buf == 'f')
-    //         fc++;
-    //     if(buf == '['){
-    //         rank++;
-    //         if(rank == 2)
-    //             weight_1++;
-    //     }
-    //     if(buf == ']'){
-    //         rank--;
-    //         if(rank == 0)
-    //             weight_1 = -1;
-    //         if(rank == 1)
-    //             weight_2 = -1;
-    //     }
-    //     if(rank == 2){
-    //         if(buf == '0'){
-    //             weight_2++;
-    //             // cout<<fc <<" "<<weight_1<<" "<<weight_2<<" "<<buf<<" "<<endl;
-    //             chart_1[fc][weight_1][weight_2] = 0; 
-    //         }
-    //         if(buf == '1'){
-    //             weight_2++;
-    //             // cout<<fc <<" "<<weight_1<<" "<<weight_2<<" "<<buf<<" "<<endl;
-    //             chart_1[fc][weight_1][weight_2] = 1; 
-    //         }
-    //     }
-    //     if(buf == '?')
-    //         flag = 0;
-    // }
-    // fin_1.close();
-    // a=  0;
-    // for(unsigned i = 0; i < 512; i++){
-    //     for(unsigned j = 0; j < 128; j++){
-    //         cout<<chart_1[0][i][j]<<" ";
-    //         a++;
-    //     }
-    // }
-    // cout<<"\n";
-    // cout<<chart_1[0][0][127]<<endl;
-    // cout<<128*512<<" "<<a<<endl;
-    // cout<<"1=========="<<endl;
