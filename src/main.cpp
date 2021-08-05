@@ -183,9 +183,9 @@ int main(int argc,char** argv){
         cout<<"fc1"<<endl;
         fc_neurons[1] = sc.linear(fc_neurons[0], fc_weight[0], sum, 64, 32);
         for(size_t i = 0; i < 32; ++i){
-            cout << sc.print(fc_neurons[1][i]) << " " << threshold_1[i] / 64.0<< endl;
             if(sc.print(fc_neurons[1][i]) < (threshold_1[i] / 64.0)) fc_neurons[1][i] = sc.bit_gen(-1);
             else fc_neurons[1][i] = sc.bit_gen(1);
+            cout << sc.print(fc_neurons[1][i]) << endl;
             
         }
         cout<<"fc2"<<endl;
@@ -193,6 +193,7 @@ int main(int argc,char** argv){
         for(size_t i = 0; i < 32; ++i){
             if(sc.print(fc_neurons[2][i]) < threshold_2[i] / 32.0) fc_neurons[2][i] = sc.bit_gen(-1);
             else fc_neurons[2][i] = sc.bit_gen(1);
+            // cout << sc.print(fc_neurons[2][i]) << endl;
         }
         fc_neurons[3] = sc.linear(fc_neurons[2], fc_weight[2], sum, 32, 4);
         for(size_t i = 0; i < 4; ++i){
@@ -216,7 +217,7 @@ int main(int argc,char** argv){
             }
         }
 
-        // cout << "label is : " << label << " ;predict is : " << max_cand << endl;
+        cout << "label is : " << label << " ;predict is : " << max_cand << endl;
         if(max_cand == label)
         {
             ++correct_count;
