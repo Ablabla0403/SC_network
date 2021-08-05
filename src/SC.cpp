@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -367,17 +368,16 @@ bool* SC::MUX_general(vector<bool*> &bit_streams){
 }
 
 //added by YEN-JU, construct conv2d for bipolar SC
-bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short img_size, short in_channels, short out_channels, short kernel_size, short stride, short padding){
+float*** SC::conv2d(float*** input, bool**** filter,vector<bool*> &vec, short img_size, short in_channels, short out_channels, short kernel_size, short stride, short padding){
     vec.clear();
     //declare a 3D array(out_channel * img_size * img_size) for the output tensor
-    bool**** output = new bool***[out_channels];
+    float*** output = new float**[out_channels];
     for(unsigned i = 0; i < out_channels; ++i){ 
-        output[i] = new bool**[img_size + 2 * padding];
+        output[i] = new float*[img_size + 2 * padding];
         for( unsigned j = 0; j < img_size + 2; ++j){ 
-            output[i][j] = new bool*[img_size + 2 * padding];
+            output[i][j] = new float[img_size + 2 * padding];
             for(unsigned k = 0; k < img_size + 2; ++k){
-                output[i][j][k] = new bool[bit_len];
-                output[i][j][k] = bit_gen(0);
+                output[i][j][k] = 0;
             }
         }
     }
@@ -390,11 +390,10 @@ bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short im
                 for(unsigned m = 0; m < kernel_size; ++m){
                     for(unsigned n = 0; n < kernel_size; ++n){
                         for(unsigned t = 0; t < in_channels; ++t){
-                            vec.push_back(XNOR(input[t][j + m][k + n],bit_gen(filter[t][i][m][n])));
+                            output[i][j + padding][k + padding] += input[t][j + m][k + n] * filter[t][i][m][n];
                         }
                     }
                 }
-                output[i][j + padding][k + padding] = MUX_general(vec);
             }
         }
     }
@@ -402,28 +401,27 @@ bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short im
 }
 
 //added by yen_ju for fully connected layers
-bool** SC::linear(bool** input, bool** weight, vector<bool*> & vec, short in, short out){
+float* SC::linear(float* input, int** weight, vector<bool*> & vec, short in, short out){
     //new the output
-    bool** output = new bool*[out];
+    float* output = new float[out];
     for(unsigned i = 0; i < out; i++){
-        output[i] = new bool[bit_len];
+        output[i] = 0;
     }
     //compute the output of each neuron
     for(unsigned i = 0; i < out; ++i){ //for each output neuron
-        vec.clear();
         for(unsigned j = 0; j < in; ++j){
-            vec.push_back(XNOR(input[j], bit_gen(weight[j][i])));
+            output[i] += input[j] * weight[j][i];
+            // cout << input[j] << " * " << weight[j][i] << endl;
         }
-        output[i] = MUX_general(vec);
     }
     return output;
 }
 
 //added by yen_ju for conv to linear transfermation
-bool** SC::view(bool**** input, short channel, short input_size){
-    bool** output = new bool*[channel * input_size * input_size];
+float* SC::view(float*** input, short channel, short input_size){
+    float* output = new float[channel * input_size * input_size];
     for(unsigned i = 0; i < channel * input_size * input_size; i++){
-        output[i] = new bool[bit_len];
+        output[i] = 0;
     }
 
     for(unsigned i = 0; i < channel; i++){
@@ -437,16 +435,15 @@ bool** SC::view(bool**** input, short channel, short input_size){
 }
 
 //
-bool**** SC::maxpool2d(bool**** input, short in_size, short channel, short kernal, short stride){
+float*** SC::maxpool2d(float*** input, short in_size, short channel, short kernal, short stride){
     //declare a 3D array(out_channel * img_size * img_size) for the output tensor
-    bool**** output = new bool***[channel];
+    float*** output = new float**[channel];
     for(unsigned i = 0; i < channel; i++){ 
-        output[i] = new bool**[in_size / 2 + 2];
+        output[i] = new float*[in_size / 2 + 2];
         for( unsigned j = 0; j < in_size / 2 + 2; j++){ 
-            output[i][j] = new bool*[in_size / 2 + 2];
+            output[i][j] = new float[in_size / 2 + 2];
             for(unsigned k = 0; k < in_size / 2 + 2; k++){
-                output[i][j][k] = new bool[bit_len];
-                output[i][j][k] = bit_gen(0);
+                output[i][j][k] = 0;
             }
         }
     }
@@ -462,7 +459,7 @@ bool**** SC::maxpool2d(bool**** input, short in_size, short channel, short kerna
             for(unsigned k = 0; k < kernal; k++){
                 for(unsigned l = 0; l < kernal; l++){
                     for(unsigned m = 0; m < channel; m++){
-                        matrix[k][l] += print(input[m][2 * i + k + 1][2 * j + l + 1]);
+                        matrix[k][l] += input[m][2 * i + k + 1][2 * j + l + 1];
                     }
                 }
             }
