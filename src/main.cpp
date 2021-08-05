@@ -165,7 +165,7 @@ int main(int argc,char** argv){
     int label = 0, max_cand = 0, correct_count = 0;
     float max = 0;
     // char b;
-    for(size_t i = 0; i < 1168; ++i)
+    for(size_t i = 0; i < 3; ++i)
     {
         for(size_t j = 0; j < 64; ++j)
         {
@@ -183,21 +183,23 @@ int main(int argc,char** argv){
         cout<<"fc1"<<endl;
         fc_neurons[1] = sc.linear(fc_neurons[0], fc_weight[0], sum, 64, 32);
         for(size_t i = 0; i < 32; ++i){
-            if(sc.print(fc_neurons[1][i]) < threshold_1[i]) fc_neurons[1][i] = sc.bit_gen(-1);
+            cout << sc.print(fc_neurons[1][i]) << " " << threshold_1[i] / 64.0<< endl;
+            if(sc.print(fc_neurons[1][i]) < (threshold_1[i] / 64.0)) fc_neurons[1][i] = sc.bit_gen(-1);
             else fc_neurons[1][i] = sc.bit_gen(1);
+            
         }
         cout<<"fc2"<<endl;
         fc_neurons[2] = sc.linear(fc_neurons[1], fc_weight[1], sum, 32, 32);
         for(size_t i = 0; i < 32; ++i){
-            if(sc.print(fc_neurons[2][i]) < threshold_2[i]) fc_neurons[2][i] = sc.bit_gen(-1);
+            if(sc.print(fc_neurons[2][i]) < threshold_2[i] / 32.0) fc_neurons[2][i] = sc.bit_gen(-1);
             else fc_neurons[2][i] = sc.bit_gen(1);
         }
         fc_neurons[3] = sc.linear(fc_neurons[2], fc_weight[2], sum, 32, 4);
         for(size_t i = 0; i < 4; ++i){
-            fc_neurons[3][0] = sc.MUX(fc_neurons[3][0], sc.bit_gen(threshold_3[0]));
+            fc_neurons[3][0] = sc.MUX(fc_neurons[3][0], sc.bit_gen(threshold_3[0] / 32.0));
             for(size_t j = 1; j < 4; ++j)
             {
-                fc_neurons[3][j] = sc.MUX(fc_neurons[3][j], sc.bit_gen(threshold_3[j]));
+                fc_neurons[3][j] = sc.MUX(fc_neurons[3][j], sc.bit_gen(threshold_3[j] / 32.0));
                 fc_neurons[3][j] = sc.XNOR(fc_neurons[3][j], sc.bit_gen(-1));
             }
         }
@@ -206,7 +208,7 @@ int main(int argc,char** argv){
         max_cand = 0;
         for(size_t j = 0; j < 4; ++j)
         {
-            cout << j + 1 << " : " << sc.print(fc_neurons[3][j]) << endl;
+            // cout << j + 1 << " : " << sc.print(fc_neurons[3][j]) << endl;
             if(sc.print(fc_neurons[3][j]) > max)
             {
                 max = sc.print(fc_neurons[3][j]);
