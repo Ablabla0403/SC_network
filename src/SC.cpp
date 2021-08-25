@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <time.h>
+#include <unordered_map>
 #include "SC.h"
 #include "definition.h"
 using namespace std;
@@ -40,19 +41,38 @@ double SC::print(bool* a){
 
 
 bool* SC::bit_gen(double number){
+    assert(number <= 1 && number >= -1);
     bool *bit_stream = new bool[bit_len];
     double prob = (number + 1.0) / 2;
-    
-    for(int i = 0; i< bit_len;i++){
-        
-        double r = (double)rand() / (RAND_MAX );
-        if(r<prob){
-            bit_stream[i] = true;
-        }
-        else{
-            bit_stream[i] = false;
+    double tmp = (double)rand() / (RAND_MAX );
+    size_t number_of_1 = bit_len * prob;
+    unordered_map<int, bool> hash;
+    int r = 0;
+
+    if(bit_len * prob - number_of_1 > tmp)
+    {
+        number_of_1++;
+    }
+
+    for(size_t i = 0; i < bit_len; ++i)
+    {
+        bit_stream[i] = false;
+    }
+
+    for(size_t i = 0; i < number_of_1; ++i)
+    {
+        while(true)
+        {
+            r = (double)rand() / (RAND_MAX) * bit_len;
+            if(hash.find(r) == hash.end())
+            {
+                hash[r] = true;
+                bit_stream[r] = true;
+                break;
+            }
         }
     }
+    
     
     return bit_stream;
 }
@@ -136,41 +156,16 @@ bool* SC::APC(bool* a, bool* b){
     return bit_gen(to_bipolar(count));
 }
 
-ESL SC::APC(ESL a, ESL b){
-    ESL output;
-    int count1 = 0, count2 = 0, count3 = 0, count4 = 0;
-    for(int i = 0 ; i < bit_len ; i++){
-        if (a.h[i] == 1){
-            count1 ++;
-        }
-        if (a.l[i] == 1){
-            count2 ++;
-        }
-        if (b.h[i] == 1){
-            count3 ++;
-        }
-        if (b.l[i] == 1){
-            count4 ++;
+int SC::APC(vector<bool*> &bitstreams){
+    int count = 0;
+    for(size_t i=0; i<bitstreams.size(); i++){
+        for(size_t j=0; j<bit_len; j++){
+            if(bitstreams[i][j]){
+                count ++;
+            }
         }
     }
-    double h = (to_bipolar(count1)*to_bipolar(count4)+to_bipolar(count3)*to_bipolar(count2));
-    double l = to_bipolar(count2)*to_bipolar(count4);
-
-    //TODO : reconstruct APC and study APC in the paper
-    if (h > 1 || h < -1 || l > 1 || l<-1){
-        output.h = bit_gen(h*0.5);
-        output.l = bit_gen(l*0.5);
-    }else if (h < 0.5 && h > -0.5 && l < 0.5 && l > -0.5)
-    {
-        output.h = bit_gen(h * 2);
-        output.l = bit_gen(l * 2);
-    }else
-    {
-        output.h = bit_gen(h);
-        output.l = bit_gen(l);
-    }
-        
-    return output;
+    return count;
 }
 
 ESL SC::NEW_APC(bool* a, bool* b){
@@ -402,7 +397,7 @@ bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short im
 }
 
 //added by yen_ju for fully connected layers
-bool** SC::linear(bool** input, int** weight, vector<bool*> & vec, short in, short out){
+bool** SC::linear(bool** input, float** weight, vector<bool*> & vec, short in, short out){
     //new the output
     bool** output = new bool*[out];
     for(unsigned i = 0; i < out; i++){

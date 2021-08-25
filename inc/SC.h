@@ -33,7 +33,7 @@ public:
     bool* XNOR(bool*, bool*);
     bool* XNOR_4(bool*, bool*,bool*, bool*);
     bool* XNOR_5(bool*, bool*,bool*, bool*,bool*);
-    ESL APC(ESL, ESL);
+    int APC(vector<bool*> &bitstreams);
     bool* APC(bool*, bool*);
     bool* MUX(bool*, bool*);
     bool* MUX_4(bool*, bool*,bool*,bool*);
@@ -55,7 +55,7 @@ public:
     bool* max_pool(bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*);
     bool* MUX_general(vector<bool*> &);
     bool**** conv2d(bool****, bool****, vector<bool*> &, short, short, short, short, short, short); //added by YEN-JU, to conduct conv2d on a bipolar sc
-    bool** linear(bool**, int**, vector<bool*> &, short, short);
+    bool** linear(bool**, float**, vector<bool*> &, short, short);
     bool** view(bool****, short, short);
     bool**** maxpool2d(bool****,short,short,short,short);
 };
