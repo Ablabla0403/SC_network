@@ -58,6 +58,7 @@ public:
     bool** linear(bool**, float**, vector<bool*> &, short, short);
     bool** view(bool****, short, short);
     bool**** maxpool2d(bool****,short,short,short,short);
+    float* linear(float* input, float** weight, vector<bool*> & vec, short in, short out);
 };
 
 

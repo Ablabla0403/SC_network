@@ -41,41 +41,99 @@ double SC::print(bool* a){
 
 
 bool* SC::bit_gen(double number){
-    assert(number <= 1 && number >= -1);
     bool *bit_stream = new bool[bit_len];
     double prob = (number + 1.0) / 2;
-    double tmp = (double)rand() / (RAND_MAX );
-    size_t number_of_1 = bit_len * prob;
+    vector<double> vec;
+    int vec_num = 1000;
     unordered_map<int, bool> hash;
-    int r = 0;
+    int k = 0;
+    double ran;
+    int num = 0;
 
-    if(bit_len * prob - number_of_1 > tmp)
-    {
-        number_of_1++;
+    while(hash.size() < vec_num){
+        ran = (double)rand() / (RAND_MAX );
+        num = ran*vec_num;
+        if(hash.find(num) == hash.end()){
+            hash[num] = true;
+            vec.push_back(num);
+        }
+        // cout << num << "\n";
     }
-
-    for(size_t i = 0; i < bit_len; ++i)
-    {
-        bit_stream[i] = false;
-    }
-
-    for(size_t i = 0; i < number_of_1; ++i)
-    {
-        while(true)
-        {
-            r = (double)rand() / (RAND_MAX) * bit_len;
-            if(hash.find(r) == hash.end())
-            {
-                hash[r] = true;
-                bit_stream[r] = true;
-                break;
-            }
+    
+    for(int i = 0; i< bit_len;i++){
+        
+        if(vec[k]/vec_num<prob){
+            bit_stream[i] = true;
+        }
+        else{
+            bit_stream[i] = false;
+        }
+        if(k == vec_num-1){
+            k = 0;
+        }
+        else{
+            k++;
         }
     }
     
-    
     return bit_stream;
 }
+
+// bool* SC::bit_gen(double number){
+//     assert(number <= 1 && number >= -1);
+//     bool *bit_stream = new bool[bit_len];
+//     double prob = (number + 1.0) / 2;
+//     double tmp = (double)rand() / (RAND_MAX );
+//     size_t number_of_1 = bit_len * prob;
+//     unordered_map<int, bool> hash;
+//     int r = 0;
+
+//     if(bit_len * prob - number_of_1 > tmp)
+//     {
+//         number_of_1++;
+//     }
+
+//     for(size_t i = 0; i < bit_len; ++i)
+//     {
+//         bit_stream[i] = false;
+//     }
+
+//     for(size_t i = 0; i < number_of_1; ++i)
+//     {
+//         while(true)
+//         {
+//             r = (double)rand() / (RAND_MAX) * bit_len;
+//             if(hash.find(r) == hash.end())
+//             {
+//                 hash[r] = true;
+//                 bit_stream[r] = true;
+//                 break;
+//             }
+//         }
+//     }
+    
+    
+//     return bit_stream;
+// }
+
+// bool* SC::bit_gen(double number){
+//     bool *bit_stream = new bool[bit_len];
+//     double prob = (number + 1.0) / 2;
+    
+//     for(int i = 0; i< bit_len;i++){
+        
+//         double r = (double)rand() / (RAND_MAX );
+//         // cout<<r<<endl;
+//         if(r<prob){
+//             bit_stream[i] = true;
+//         }
+//         else{
+//             bit_stream[i] = false;
+//         }
+//     }
+    
+//     return bit_stream;
+// }
 
 ESL SC::number_gen(double number){ //分母先都初始化為一
     ESL output;
@@ -354,9 +412,20 @@ ESL SC::ToESL(bool* a){
 bool* SC::MUX_general(vector<bool*> &bit_streams){
     bool* output = new bool[bit_len];
     float r;
-    for(int i = 0; i < bit_len; ++i){
-        r = int((float)rand() / (RAND_MAX) * (float)bit_streams.size()) % bit_streams.size();
-        output[i] = bit_streams[r][i];
+    int count = bit_streams.size() / 2;
+    for(size_t i=0; i<bit_len; ++i){
+        for(size_t j=0; j<bit_streams.size(); ++j){
+            if(bit_streams[j][i]){
+                count ++;
+            }
+        }
+        if(count >= bit_streams.size()){
+            output[i] = true;
+            count -= bit_streams.size();
+        }
+        else{
+            output[i] = false;
+        }
     }
     return output;
 }
@@ -476,6 +545,21 @@ bool**** SC::maxpool2d(bool**** input, short in_size, short channel, short kerna
             for(unsigned k = 0; k < channel; k++){
                 output[k][i + 1][j + 1] = input[k][2 * i + x + 1][2 * j + y +1];
             }
+        }
+    }
+    return output;
+}
+
+float* SC::linear(float* input, float** weight, vector<bool*> & vec, short in, short out){
+    //new the output
+    float* output = new float[out];
+    for(unsigned i = 0; i < out; i++){
+        output[i] = 0;
+    }
+    //compute the output of each neuron
+    for(unsigned i = 0; i < out; ++i){ //for each output neuron
+        for(unsigned j = 0; j < in; ++j){
+            output[i] += input[j] + weight[j][i];
         }
     }
     return output;
