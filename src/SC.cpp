@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <time.h>
+#include <unordered_map>
 #include "SC.h"
 #include "definition.h"
 using namespace std;
@@ -42,20 +43,57 @@ double SC::print(bool* a){
 bool* SC::bit_gen(double number){
     bool *bit_stream = new bool[bit_len];
     double prob = (number + 1.0) / 2;
+    vector<double> vec;
+    int vec_num = 1000;
+    unordered_map<int, bool> hash;
+    int k = 0;
+    double ran;
+    int num = 0;
+
+    while(hash.size() < vec_num){
+        ran = (double)rand() / (RAND_MAX );
+        num = ran*vec_num;
+        if(hash.find(num) == hash.end()){
+            hash[num] = true;
+            vec.push_back(num);
+        }
+        // cout << num << "\n";
+    }
     
     for(int i = 0; i< bit_len;i++){
         
-        double r = (double)rand() / (RAND_MAX );
-        if(r<prob){
+        if(vec[k]/vec_num<prob){
             bit_stream[i] = true;
         }
         else{
             bit_stream[i] = false;
         }
+        if(k == vec_num-1){
+            k = 0;
+        }
+        else{
+            k++;
+        }
     }
     
     return bit_stream;
 }
+
+// int* SC::int_SC_gen(double number){
+//     int *int_stream = new int[bit_len];
+//     double prob = (number + 1.0) / 2;
+    
+//     for(int i = 0; i< bit_len;i++){
+        
+//         double r = (double)rand() / (RAND_MAX );
+//         if(r<prob){
+//             bit_stream[i] = true;
+//         }
+//         else{
+//             bit_stream[i] = false;
+//         }
+//     }
+// }
 
 ESL SC::number_gen(double number){ //分母先都初始化為一
     ESL output;
@@ -359,11 +397,34 @@ ESL SC::ToESL(bool* a){
 bool* SC::MUX_general(vector<bool*> &bit_streams){
     bool* output = new bool[bit_len];
     float r;
-    for(int i = 0; i < bit_len; ++i){
-        r = int((float)rand() / (RAND_MAX) * (float)bit_streams.size()) % bit_streams.size();
-        output[i] = bit_streams[r][i];
+    int count = 0;
+    for(size_t i=0; i<bit_len; ++i){
+        for(size_t j=0; j<bit_streams.size(); ++j){
+            if(bit_streams[j][i]){
+                count ++;
+            }
+        }
+        if(count >= bit_streams.size()){
+            output[i] = true;
+            count -= bit_streams.size();
+        }
+        else{
+            output[i] = false;
+        }
     }
     return output;
+}
+
+int SC::APC(vector<bool*> &bitstreams){
+    int count = 0;
+    for(size_t i=0; i<bitstreams.size(); i++){
+        for(size_t j=0; j<bit_len; j++){
+            if(bitstreams[i][j]){
+                count ++;
+            }
+        }
+    }
+    return count;
 }
 
 //added by YEN-JU, construct conv2d for bipolar SC
@@ -402,19 +463,18 @@ bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short im
 }
 
 //added by yen_ju for fully connected layers
-bool** SC::linear(bool** input, bool** weight, vector<bool*> & vec, short in, short out){
+float* SC::linear(float* input, vector<vector<float>>& weight, vector<float>& bias, short in, short out){
     //new the output
-    bool** output = new bool*[out];
+    float* output = new float[out];
     for(unsigned i = 0; i < out; i++){
-        output[i] = new bool[bit_len];
+        output[i] = 0;
     }
     //compute the output of each neuron
     for(unsigned i = 0; i < out; ++i){ //for each output neuron
-        vec.clear();
         for(unsigned j = 0; j < in; ++j){
-            vec.push_back(XNOR(input[j], bit_gen(weight[j][i])));
+            output[i] += input[j] * weight[i][j];
         }
-        output[i] = MUX_general(vec);
+        output[i] += bias[i];
     }
     return output;
 }
@@ -484,4 +544,27 @@ bool**** SC::maxpool2d(bool**** input, short in_size, short channel, short kerna
         }
     }
     return output;
+}
+
+bool* SC::Stanh(vector<bool*>& bit_streams){
+    int num = bit_streams.size();
+    bool* ans = new bool[bit_len];
+    int counter = 0, S = 0;
+    for(size_t i=0; i<bit_len; ++i){
+        S = 0;
+        for(size_t j=0; j<num; ++j){
+            if(bit_streams[j][i]) S++;
+            else S--;
+        }
+        cout << counter <<  "  " << S << "\n";
+        counter += S;
+
+        if(counter > 4*num-1) counter = 4*num-1;
+        else if(counter < 0) counter = 0;
+
+        if(counter > 2*num-1) ans[i] = true;
+        else ans[i] = false;
+    }
+    return ans;
+
 }
