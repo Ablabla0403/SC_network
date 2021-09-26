@@ -132,15 +132,16 @@ bool* SC::MUX_general(vector<bool*> &bit_streams){
 
 
 //added by YEN-JU, construct conv2d for bipolar SC
-bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short img_size, short in_channels, short out_channels, short kernel_size, short stride, short padding){
+bool**** SC::conv2d(bool**** input, vector<vector<vector<vector<float>>>>& filter,vector<float>& bias, vector<bool*> &vec, short img_size, short in_channels, short out_channels){
     vec.clear();
+    int left, right, up, down, count = 0;
     //declare a 3D array(out_channel * img_size * img_size) for the output tensor
     bool**** output = new bool***[out_channels];
     for(unsigned i = 0; i < out_channels; ++i){ 
-        output[i] = new bool**[img_size + 2 * padding];
-        for( unsigned j = 0; j < img_size + 2; ++j){ 
-            output[i][j] = new bool*[img_size + 2 * padding];
-            for(unsigned k = 0; k < img_size + 2; ++k){
+        output[i] = new bool**[img_size];
+        for( unsigned j = 0; j < img_size; ++j){ 
+            output[i][j] = new bool*[img_size];
+            for(unsigned k = 0; k < img_size; ++k){
                 output[i][j][k] = new bool[bit_len];
                 output[i][j][k] = bit_gen(0);
             }
@@ -152,14 +153,69 @@ bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short im
         for(unsigned j = 0; j < img_size; ++j){
             for(unsigned k = 0; k < img_size; ++k){
                 vec.clear();
-                for(unsigned m = 0; m < kernel_size; ++m){
-                    for(unsigned n = 0; n < kernel_size; ++n){
+                left = -1, right = 2, up = -1, down = 2;
+                if(j == 0) left = 0;
+                if(j == img_size - 1) right = 1;
+                if(k == 0) up = 0;
+                if(k == img_size - 1) down = 1;
+                for(int m = left; m < right; ++m){
+                    for(int n = up; n < down; ++n){
                         for(unsigned t = 0; t < in_channels; ++t){
-                            vec.push_back(XNOR(input[t][j + m][k + n],bit_gen(filter[t][i][m][n])));
+                            // vec.push_back(XNOR(input[t][j + m][k + n],bit_gen(filter[i][m][n])));
+                            vec.push_back(XNOR(input[t][j + m][k + n] , bit_gen(filter[i][t][m+1][n+1])));
+                            count++;
                         }
                     }
                 }
-                output[i][j + padding][k + padding] = MUX_general(vec);
+                vec.push_back(bit_gen(bias[i]));
+                output[i][j][k] = Hardtanh(vec);
+            }
+        }
+    }
+    return output;
+}
+
+float*** SC::conv2d(float*** input, vector<vector<vector<vector<float>>>>& filter,vector<float>& bias, vector<bool*> &vec, short img_size, short in_channels, short out_channels){
+    // vec.clear();
+    //declare a 3D array(out_channel * img_size * img_size) for the output tensor
+    float*** output = new float**[out_channels];
+    for(unsigned i = 0; i < out_channels; ++i){ 
+        output[i] = new float*[img_size];
+        for( unsigned j = 0; j < img_size; ++j){ 
+            output[i][j] = new float[img_size];
+            for(unsigned k = 0; k < img_size; ++k){
+                output[i][j][k] = 0;
+            }
+        }
+    }
+    float tmp = 0;
+    int left, right, up, down, count = 0;
+    //compute output channels
+    for(unsigned i = 0; i < out_channels; ++i){
+        for(unsigned j = 0; j < img_size; ++j){
+            for(unsigned k = 0; k < img_size; ++k){
+                // vec.clear();
+                left = -1, right = 2, up = -1, down = 2;
+                if(j == 0) left = 0;
+                if(j == img_size - 1) right = 1;
+                if(k == 0) up = 0;
+                if(k == img_size - 1) down = 1;
+                tmp = 0;
+                count = 0;
+                // cout << "up = " << up << " down = " << down << " left = " << left << " right = " << right << endl;
+                for(int m = left; m < right; ++m){
+                    for(int n = up; n < down; ++n){
+                        for(unsigned t = 0; t < in_channels; ++t){
+                            // vec.push_back(XNOR(input[t][j + m][k + n],bit_gen(filter[i][m][n])));
+                            tmp += input[t][j + m][k + n] * filter[i][t][m+1][n+1];
+                            count++;
+                        }
+                    }
+                }
+                // vec.push_back(bit_gen(bias[i]));
+                // cout << "Count =  " << count << endl;
+                tmp += bias[i];
+                output[i][j][k] += tmp;
             }
         }
     }
@@ -167,7 +223,7 @@ bool**** SC::conv2d(bool**** input, bool**** filter,vector<bool*> &vec, short im
 }
 
 //added by yen_ju for fully connected layers
-float* SC::linear(float* input, vector<vector<float>>& weight, vector<float>& bias, short in, short out){
+float* SC::linear(float* input, vector<vector<float>>& weight, vector<float>& bias, short in, short out, bool hardtanh){
     //new the output
     float* output = new float[out];
     for(unsigned i = 0; i < out; i++){
@@ -179,6 +235,11 @@ float* SC::linear(float* input, vector<vector<float>>& weight, vector<float>& bi
             output[i] += input[j] * weight[i][j];
         }
         output[i] += bias[i];
+        if(hardtanh)
+        {
+            if(output[i] > 1) output[i] = 1;
+            if(output[i] < -1) output[i] = -1;
+        }
     }
     return output;
 }
@@ -235,7 +296,23 @@ bool** SC::view(bool**** input, short channel, short input_size){
     for(unsigned i = 0; i < channel; i++){
         for(unsigned j = 0; j < input_size; j++){
             for(unsigned k = 0; k < input_size; k++){
-                output[i * input_size * input_size + j * input_size + k] = input[i][j + 1][k + 1];
+                output[i * input_size * input_size + j * input_size + k] = input[i][j][k];
+            }
+        }
+    }
+    return output;
+}
+
+float* SC::view(float*** input, short channel, short input_size){
+    float* output = new float[channel * input_size * input_size];
+    for(unsigned i = 0; i < channel * input_size * input_size; i++){
+        output[i] = 0;
+    }
+
+    for(unsigned i = 0; i < channel; i++){
+        for(unsigned j = 0; j < input_size; j++){
+            for(unsigned k = 0; k < input_size; k++){
+                output[i * input_size * input_size + j * input_size + k] = input[i][j][k];
             }
         }
     }
@@ -257,35 +334,75 @@ bool**** SC::maxpool2d(bool**** input, short in_size, short channel, short kerna
         }
     }
     //find the max element of each kernal
-    int max = 0, x = 0, y = 0, matrix[kernal][kernal];
-    for( unsigned i = 0; i < in_size / 2; i++){ 
-        for(unsigned j = 0; j < in_size / 2; j++){
-            for(unsigned k = 0; k < kernal; k++){
-                for(unsigned l = 0; l < 2; l++){
-                    matrix[k][l] = 0;
-                }
-            }
-            for(unsigned k = 0; k < kernal; k++){
-                for(unsigned l = 0; l < kernal; l++){
-                    for(unsigned m = 0; m < channel; m++){
-                        matrix[k][l] += print(input[m][2 * i + k + 1][2 * j + l + 1]);
+    float max = 0;
+    int x = 0, y = 0;
+    for( unsigned i = 0; i < in_size / 2; ++i){ 
+        for(unsigned j = 0; j < in_size / 2; ++j){
+            // cout << i << " " << j << endl;
+            for(unsigned k = 0; k < channel; k++)
+            {
+                max = -10000;
+                x = 0;
+                y = 0;
+                for(unsigned l = 0; l < kernal; l++)
+                {
+                    for(unsigned m = 0; m < kernal; m++)
+                    {
+                        if(print(input[k][2 * i + l][2 * j + m]) > max)
+                        {
+                            x = l;
+                            y = m;
+                            max = print(input[k][2 * i + l][2 * j + m]);
+                        }
                     }
                 }
+                if(max > 1) max = 1;
+                if(max < -1) max = -1;
+                output[k][i][j] = input[k][2 * i + x][2 * j + y];
             }
-            max = 0;
-            x = 0;
-            y = 0;
-            for(unsigned k = 0; k < kernal; k++){
-                for(unsigned l = 0; l < 2; l++){
-                    if(matrix[k][l] > max){
-                        max = matrix[k][l];
-                        x = k;
-                        y = l;
+        }
+    }
+    return output;
+}
+
+float*** SC::maxpool2d(float*** input, short in_size, short channel, short kernal, short stride){
+    //declare a 3D array(out_channel * img_size * img_size) for the output tensor
+    float*** output = new float**[channel];
+    for(unsigned i = 0; i < channel; i++){ 
+        output[i] = new float*[in_size / 2];
+        for( unsigned j = 0; j < in_size / 2; j++){ 
+            output[i][j] = new float[in_size / 2];
+            for(unsigned k = 0; k < in_size / 2; k++){
+                output[i][j][k] = 0;
+            }
+        }
+    }
+    //find the max element of each kernal
+    float max = 0;
+    int x = 0, y = 0;
+    for( unsigned i = 0; i < in_size / 2; ++i){ 
+        for(unsigned j = 0; j < in_size / 2; ++j){
+            // cout << i << " " << j << endl;
+            for(unsigned k = 0; k < channel; k++)
+            {
+                max = -10000;
+                x = 0;
+                y = 0;
+                for(unsigned l = 0; l < kernal; l++)
+                {
+                    for(unsigned m = 0; m < kernal; m++)
+                    {
+                        if(input[k][2 * i + l][2 * j + m] > max)
+                        {
+                            x = l;
+                            y = m;
+                            max = input[k][2 * i + l][2 * j + m];
+                        }
                     }
                 }
-            }
-            for(unsigned k = 0; k < channel; k++){
-                output[k][i + 1][j + 1] = input[k][2 * i + x + 1][2 * j + y +1];
+                if(max > 1) max = 1;
+                if(max < -1) max = -1;
+                output[k][i][j] = max;
             }
         }
     }
