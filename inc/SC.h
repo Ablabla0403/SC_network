@@ -1,3 +1,4 @@
+
 /****************************************************************************
   FileName     [ SC.h ]
   Author       [ YEN-JU (Andrew) LEE ]
@@ -26,17 +27,24 @@ public:
     double print(bool*);
     bool* bit_gen(double);
     bool* XNOR(bool*, bool*);
+    bool* AND(bool*, bool*);
+    bool* OR(bool*, bool*);
     bool* MUX(bool*, bool*);
     bool* ReLU(bool*);
     bool* max_pool(bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*,bool*);
     bool* MUX_general(vector<bool*> &);
-    bool**** conv2d(bool****, bool****, vector<bool*> &, short, short, short, short, short, short); //added by YEN-JU, to conduct conv2d on a bipolar sc
+    bool* tree_adder(vector<bool*> &);
+    bool**** conv2d(bool**** input, vector<vector<vector<vector<float>>>>& filter,vector<float>& bias, vector<bool*> &vec, short img_size, short in_channels, short out_channels);
+    float*** conv2d(float*** input, vector<vector<vector<vector<float>>>>& filter,vector<float>& bias, vector<bool*> &vec, short img_size, short in_channels, short out_channels);
     bool** linear(bool**, vector<vector<float>>&, vector<float>&, vector<bool*>&, short, short, bool);
-    float* linear(float*, vector<vector<float>>&, vector<float>&, short, short);
+    float* linear(float*, vector<vector<float>>&, vector<float>&, short, short, bool hardtanh);
     bool** view(bool****, short, short);
+    float* view(float*** input, short channel, short input_size);
     bool**** maxpool2d(bool****,short,short,short,short);
+    float*** maxpool2d(float***,short,short,short,short);
     bool* Stanh(vector<bool*>& );
     bool* Hardtanh(vector<bool*>& );
+
 
     //data member
     vector<double> lfsr;
