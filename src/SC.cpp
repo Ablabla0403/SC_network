@@ -85,19 +85,39 @@ bool* SC::OR(bool* a, bool* b)
 bool* SC::tree_adder(vector<bool*> & vec)
 {
     vector<bool*> tmp_vec = vec;
+    // cout << "haha" << vec.size() << "\n";
+    bool* tmp = new bool[bit_len];
     int num_before = vec.size(), num_after = (vec.size() + 1)/2 ;
+    
     while (num_before > 1) {
+        // cout << "num = " << num_before << "  " << num_after << endl;
         if (num_before % 2 == 0) {
             for (size_t i = 0; i < num_after; ++i) {
-                tmp_vec.push_back(OR(tmp_vec[2*i], tmp_vec[2*i+1]));
+                // cout << "lll " << print(tmp_vec[2*i]) << " " << print(tmp_vec[2*i+1]) << endl;
+                tmp = OR(tmp_vec[2*i], tmp_vec[2*i+1]);
+                // cout << "bello " << print(tmp) << endl;
+                tmp_vec.push_back(tmp);
             }
         } else {
             for (size_t i = 0; i < num_after-1; ++i) {
-                tmp_vec.push_back(OR(tmp_vec[2*i], tmp_vec[2*i+1]));
+                tmp = OR(tmp_vec[2*i], tmp_vec[2*i+1]);
+                // cout << "bello " << print(tmp) << endl;
+                tmp_vec.push_back(tmp);
             }
-            tmp_vec.push_back(vec[2*num_after]);
+            tmp_vec.push_back(vec[num_before - 1]);
+            // for (size_t i = 0; i < num_after - 1; ++i) {
+            //     cout << "lll " << print(tmp_vec[i]) << endl;
+            // }
         }
+        // for(size_t i = 0; i < tmp_vec.size(); ++i)
+        // {
+        //     cout << "bello " << print(tmp_vec[i]) << endl;
+        // }
         tmp_vec.erase(tmp_vec.begin(), tmp_vec.begin()+num_before);
+        // for(size_t i = 0; i < tmp_vec.size(); ++i)
+        // {
+        //     cout << "hello " << print(tmp_vec[i]) << endl;
+        // }
         num_before = num_after;
         num_after = (num_after + 1)/2;
     }
@@ -201,13 +221,13 @@ bool**** SC::conv2d(bool**** input, vector<vector<vector<vector<float>>>>& filte
                     for(int n = up; n < down; ++n){
                         for(unsigned t = 0; t < in_channels; ++t){
                             // vec.push_back(XNOR(input[t][j + m][k + n],bit_gen(filter[i][m][n])));
-                            vec.push_back(XNOR(input[t][j + m][k + n] , bit_gen(filter[i][t][m+1][n+1])));
+                            vec.push_back(AND(input[t][j + m][k + n] , bit_gen(filter[i][t][m+1][n+1])));
                             count++;
                         }
                     }
                 }
                 vec.push_back(bit_gen(bias[i]));
-                output[i][j][k] = Hardtanh(vec);
+                output[i][j][k] = tree_adder(vec);
             }
         }
     }
