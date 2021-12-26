@@ -8,6 +8,7 @@
 #include "../inc/SC.h"
 #include "../inc/definition.h"
 #include <cmath>
+#include <cstdarg>
 
 using namespace std;
 
@@ -20,8 +21,12 @@ int main(int argc,char** argv){
     unordered_map<int, bool> hash;
     double ran;
     int num = 0;
-    if( argc > 1) flag_b = true;
-    if( argc > 2) flag_c = true;
+    // if( argc > 1) flag_b = true;
+    // if( argc > 2) flag_c = true;
+    string options =  "";
+	options = argv[1];
+    flag_b = ( options.find('b') != string::npos );
+    flag_c = ( options.find('c') != string::npos );
     // cout << "flag_b = " << flag_b << " " << argv[1] << endl;
     while(hash.size() < vec_num){
         ran = (double)rand() / (RAND_MAX );
