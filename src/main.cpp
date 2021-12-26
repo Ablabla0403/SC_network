@@ -191,7 +191,7 @@ int main(int argc,char** argv){
     }
     while(fin >> str){
         // cout << "test data " << str << endl;
-        test.push_back(stof(str)/256);
+        test.push_back(stof(str)/(256 * 128));
         count ++;
         if(count % 28 == 0){
             testVecVec.push_back(test);
@@ -405,6 +405,11 @@ int main(int argc,char** argv){
 
         if(flag_b) fc_neurons_b[0] = sc.view(cnn_neurons_b[3], 32, 7);
         if(flag_c) fc_neurons[0] = sc.view(cnn_neurons[3], 32, 7);
+        // for(size_t j = 0; j < 7 * 7 * 32; ++j)
+        // {
+        //     cout << "b " << fc_neurons_b[0][j] << endl;
+        //     cout << "sc " << sc.print(fc_neurons[0][j]) << endl;
+        // }
         
         
         if(flag_b) fc_neurons_b[1] = sc.linear(fc_neurons_b[0], w_params[0], b_params[0], 32 * 7 * 7, 10, false);
