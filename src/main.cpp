@@ -15,11 +15,13 @@ int main(int argc,char** argv){
 
     vector<double> lfsr;
     bool flag_b = false;
+    bool flag_c = false;
     int vec_num = 1000;
     unordered_map<int, bool> hash;
     double ran;
     int num = 0;
     if( argc > 1) flag_b = true;
+    if( argc > 2) flag_c = true;
     // cout << "flag_b = " << flag_b << " " << argv[1] << endl;
     while(hash.size() < vec_num){
         ran = (double)rand() / (RAND_MAX );
@@ -124,9 +126,9 @@ int main(int argc,char** argv){
     {
         for(size_t j = 0; j < 32; ++j)
         {
-            for(size_t k = 0; k < 5; ++k)
+            for(size_t k = 0; k < 3; ++k)
             {
-                for(size_t l = 0; l < 5; ++l)
+                for(size_t l = 0; l < 3; ++l)
                 {
                     fin >> str;
                     cnn_w_params[2][i][j][k][l] = stof(str);
@@ -360,7 +362,7 @@ int main(int argc,char** argv){
         }
 
         cout << "cnn1 start" << endl;
-        cnn_neurons[1] = sc.conv2d(cnn_neurons[0], cnn_w_params[0], cnn_b_params[0], vec, 28, 1, 32);
+        if(flag_c) cnn_neurons[1] = sc.conv2d(cnn_neurons[0], cnn_w_params[0], cnn_b_params[0], vec, 28, 1, 32);
         if(flag_b) cnn_neurons_b[1] = sc.conv2d(cnn_neurons_b[0], cnn_w_params[0], cnn_b_params[0], vec, 28, 1, 32);
         cout << "cnn1 ended" << endl;
         // for(size_t j = 0; j < 1; ++j)
@@ -380,28 +382,28 @@ int main(int argc,char** argv){
         
         
         if(flag_b) cnn_neurons_b[1] = sc.maxpool2d(cnn_neurons_b[1], 28, 32, 2, 2);
-        cnn_neurons[1] = sc.maxpool2d(cnn_neurons[1], 28, 32, 2, 2);
+        if(flag_c) cnn_neurons[1] = sc.maxpool2d(cnn_neurons[1], 28, 32, 2, 2);
 
         // cout << "maxpool succeed" << endl;
         if(flag_b) cnn_neurons_b[2] = sc.conv2d(cnn_neurons_b[1], cnn_w_params[1], cnn_b_params[1], vec, 14, 32, 32);
-        cnn_neurons[2] = sc.conv2d(cnn_neurons[1], cnn_w_params[1], cnn_b_params[1], vec, 14, 32, 32);
+        if(flag_c) cnn_neurons[2] = sc.conv2d(cnn_neurons[1], cnn_w_params[1], cnn_b_params[1], vec, 14, 32, 32);
         
         
         if(flag_b) cnn_neurons_b[2] = sc.maxpool2d(cnn_neurons_b[2], 14, 32, 2, 2);
-        cnn_neurons[2] = sc.maxpool2d(cnn_neurons[2], 14, 32, 2, 2);
+        if(flag_c) cnn_neurons[2] = sc.maxpool2d(cnn_neurons[2], 14, 32, 2, 2);
 
         if(flag_b) cnn_neurons_b[3] = sc.conv2d(cnn_neurons_b[2], cnn_w_params[2], cnn_b_params[2], vec, 7, 32, 32);
-        cnn_neurons[3] = sc.conv2d(cnn_neurons[2], cnn_w_params[2], cnn_b_params[2], vec, 7, 32, 32);
+        if(flag_c) cnn_neurons[3] = sc.conv2d(cnn_neurons[2], cnn_w_params[2], cnn_b_params[2], vec, 7, 32, 32);
         
         // if(flag_b) cnn_neurons_b[3] = sc.maxpool2d(cnn_neurons_b[3], 8, 16, 2, 2);
         // cnn_neurons[3] = sc.maxpool2d(cnn_neurons[3], 8, 16, 2, 2);
 
         if(flag_b) fc_neurons_b[0] = sc.view(cnn_neurons_b[3], 32, 7);
-        fc_neurons[0] = sc.view(cnn_neurons[3], 32, 7);
+        if(flag_c) fc_neurons[0] = sc.view(cnn_neurons[3], 32, 7);
         
         
         if(flag_b) fc_neurons_b[1] = sc.linear(fc_neurons_b[0], w_params[0], b_params[0], 32 * 7 * 7, 10, false);
-        fc_neurons[1] = sc.linear(fc_neurons[0], w_params[0], b_params[0], vec, 32 * 7 * 7, 10, false);
+        if(flag_c) fc_neurons[1] = sc.linear(fc_neurons[0], w_params[0], b_params[0], vec, 32 * 7 * 7, 10, false);
         
 
 
@@ -427,10 +429,10 @@ int main(int argc,char** argv){
         // fc_neurons[4] = sc.linear(fc_neurons[3], w_params[3], b_params[3], vec, 64, 10, false);
         // fc_neurons_b[4] = sc.linear(fc_neurons_b[3], w_params[3], b_params[3], 64, 10, false);
 
-        cout << 4 << "\n";
+        // cout << 4 << "\n";
 
         for(int k = 0; k < 10; ++k){
-            cout << sc.print(fc_neurons[1][k]) << "\n";
+            if(flag_c) cout << sc.print(fc_neurons[1][k]) << "\n";
             if(flag_b) cout << "b " << fc_neurons_b[1][k] << "\n";
         }
 
@@ -438,10 +440,10 @@ int main(int argc,char** argv){
         max = sc.print(fc_neurons[1][0]);
         max_cand = 0;
         if(flag_b) max_b = fc_neurons_b[1][0];
-        max_cand_b = 0;
+        if(flag_c) max_cand_b = 0;
         for(size_t j = 0; j < 10; ++j)
         {
-            if(sc.print(fc_neurons[1][j]) > max)
+            if(flag_c && sc.print(fc_neurons[1][j]) > max)
             {
                 max = sc.print(fc_neurons[1][j]);
                 max_cand = j;
@@ -453,9 +455,9 @@ int main(int argc,char** argv){
             }
         }
 
-        cout << "label is : " << test_labels[i] << " ;predict is : " << max_cand << endl;
+        if(flag_c) cout << "label is : " << test_labels[i] << " ;predict is : " << max_cand << endl;
         if(flag_b) cout << "label is :(b) " << test_labels[i] << " ;predict is : " << max_cand_b << endl;
-        if(max_cand == test_labels[i])
+        if(flag_c && max_cand == test_labels[i])
         {
             ++correct_count;
             // cout << "correct!!!" << endl;
@@ -466,7 +468,7 @@ int main(int argc,char** argv){
             ++correct_count_b;
             // cout << "correct!!!" << endl;
         }
-        cout << "accuracy = " << (float)correct_count / (i + 1) << endl;
+        if(flag_c) cout << "accuracy = " << (float)correct_count / (i + 1) << endl;
         if(flag_b) cout << "accuracy =(b) " << (float)correct_count_b / (i + 1) << endl;
     }
     

@@ -240,7 +240,7 @@ float*** SC::conv2d(float*** input, vector<vector<vector<vector<float>>>>& filte
     float*** output = new float**[out_channels];
     for(unsigned i = 0; i < out_channels; ++i){ 
         output[i] = new float*[img_size];
-        for( unsigned j = 0; j < img_size; ++j){ 
+        for(unsigned j = 0; j < img_size; ++j){ 
             output[i][j] = new float[img_size];
             for(unsigned k = 0; k < img_size; ++k){
                 output[i][j][k] = 0;
@@ -274,7 +274,7 @@ float*** SC::conv2d(float*** input, vector<vector<vector<vector<float>>>>& filte
                 // vec.push_back(bit_gen(bias[i]));
                 // cout << "Count =  " << count << endl;
                 tmp += bias[i];
-                output[i][j][k] += tmp;
+                output[i][j][k] = (tmp>1)? 1 : tmp;
             }
         }
     }
