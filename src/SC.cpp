@@ -121,7 +121,8 @@ bool* SC::tree_adder(vector<bool*> & vec)
         num_before = num_after;
         num_after = (num_after + 1)/2;
     }
-    return tmp_vec[0];
+    tmp = tmp_vec[0];
+    return tmp;
 }
 
 bool* SC::XNOR(bool* a, bool* b)
@@ -319,10 +320,14 @@ bool** SC::linear(bool** input, vector<vector<float>>& weight, vector<float>& bi
         vec.clear();
         for(unsigned j = 0; j < in; ++j){
             vec.push_back(AND(input[j], bit_gen(weight[i][j])));
+            // cout << "vec len = " << vec.size() << endl;
+            // cout << "i = " << i << " j = " << j << " input " << print(input[j]) << " weight " << weight[i][j] << " pushed " << print(AND(input[j], bit_gen(weight[i][j]))) << " ans " << print(tree_adder(vec)) << endl;
         }
+        // cout << "before bias : " << print(tree_adder(vec)) << endl;
         vec.push_back(bit_gen(bias[i]));
-
+        // cout << "bias = " << print(vec[vec.size() - 1]) << endl;
         output[i] = tree_adder(vec);
+        // cout << "after bias : " << print(output[i]) << endl;
     }
 
     return output;
