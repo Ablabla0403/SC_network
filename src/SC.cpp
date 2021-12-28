@@ -35,7 +35,7 @@ bool* SC::bit_gen(double number){
     
     for(int i = 0; i < bit_len; i++){
         
-        double r = (double)rand() / (RAND_MAX );
+        double r = (double)(rand()+500.483) * 3 / (RAND_MAX );
         if(r < prob){
             bit_stream[i] = true;
         }
